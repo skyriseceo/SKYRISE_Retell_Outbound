@@ -1,0 +1,722 @@
+@{
+    ViewData["Title"] = "Settings";
+}
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    [NEW] MASTER CSS STYLES (من ملف Customers/Bookings)
+    ═══════════════════════════════════════════════════════════════
+-->
+<style>
+    /* ============================================================
+            CSS VARIABLES
+        ============================================================ */
+    :root {
+        --primary-50: #EEF2FF;
+        --primary-100: #E0E7FF;
+        --primary-500: #6366F1;
+        --primary-600: #4F46E5;
+        --primary-700: #4338CA;
+        --success-50: #ECFDF5;
+        --success-100: #D1FAE5;
+        --success-500: #10B981;
+        --success-600: #059669;
+        --warning-50: #FEF3C7;
+        --warning-100: #FDE68A;
+        --warning-500: #F59E0B;
+        --warning-600: #D97706;
+        --danger-50: #FEE2E2;
+        --danger-100: #FECACA;
+        --danger-500: #EF4444;
+        --danger-600: #DC2626;
+        --gray-50: #F9FAFB;
+        --gray-100: #F3F4F6;
+        --gray-200: #E5E7EB;
+        --gray-300: #D1D5DB;
+        --gray-500: #6B7280;
+        --gray-600: #4B5563;
+        --gray-700: #374151;
+        --gray-900: #111827;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        --border-radius-md: 0.5rem;
+        --border-radius-lg: 0.75rem;
+        --border-radius-xl: 1rem;
+        --border-radius-full: 9999px;
+        --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================================
+            ANIMATIONS
+        ============================================================ */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* ============================================================
+            PAGE HEADER
+        ============================================================ */
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: var(--border-radius-xl);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-xl);
+        position: relative;
+        overflow: hidden;
+        animation: slideDown var(--transition-base);
+    }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.5;
+        }
+
+    .page-header-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .page-header-icon {
+        width: 4rem;
+        height: 4rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: var(--border-radius-xl);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        transition: transform var(--transition-base);
+    }
+
+        .page-header-icon i {
+            font-size: 2rem;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+    .page-header-text h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-header-text p {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.5rem 0 0 0;
+        font-weight: 500;
+    }
+
+    /* ============================================================
+            BUTTONS
+        ============================================================ */
+    .btn {
+        padding: 0.875rem 1.75rem;
+        border-radius: var(--border-radius-full);
+        font-size: 1rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all var(--transition-base);
+        border: none;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        box-shadow: var(--shadow-md);
+    }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        color: #ffffff;
+    }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--primary-700), var(--primary-800));
+        }
+
+    /* This is the gray button style used in modal footers */
+    .btn-secondary {
+        background: var(--gray-100);
+        color: var(--gray-700);
+        border: 2px solid var(--gray-300);
+        backdrop-filter: none;
+    }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--gray-200);
+            color: var(--gray-900);
+            border-color: var(--gray-400);
+        }
+
+    /* ============================================================
+            MAIN CONTENT CONTAINER (reusing table-container style)
+        ============================================================ */
+    .content-container {
+        background: #ffffff;
+        border-radius: var(--border-radius-xl);
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--gray-200);
+        overflow: hidden;
+        animation: fadeIn var(--transition-base);
+    }
+
+    /* ============================================================
+            AVATAR (for profile)
+        ============================================================ */
+    .avatar {
+        width: 3rem;
+        height: 3rem;
+        border-radius: var(--border-radius-full);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #ffffff;
+        background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+        box-shadow: var(--shadow-md);
+    }
+
+    .avatar-xl {
+        width: 5rem;
+        height: 5rem;
+        font-size: 2rem;
+        border-radius: var(--border-radius-full);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: #ffffff;
+        background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+        box-shadow: var(--shadow-md);
+    }
+
+    /* ============================================================
+            BADGES (for profile)
+        ============================================================ */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        border-radius: var(--border-radius-full);
+        white-space: nowrap;
+        letter-spacing: 0.025em;
+        text-transform: uppercase;
+        box-shadow: var(--shadow-sm);
+    }
+
+        .badge i {
+            font-size: 0.9rem;
+        }
+
+    .badge-success {
+        background: linear-gradient(135deg, var(--success-100), var(--success-50));
+        color: var(--success-600);
+        border: 2px solid var(--success-600);
+    }
+
+    .badge-warning {
+        background: linear-gradient(135deg, var(--warning-100), var(--warning-50));
+        color: var(--warning-600);
+        border: 2px solid var(--warning-600);
+    }
+
+    .badge-purple { /* For roles */
+        background: linear-gradient(135deg, #F3E8FF, #E9D5FF); /* Purple light */
+        color: #5B21B6; /* Purple dark */
+        border: 2px solid #7C3AED;
+    }
+
+
+    /* ============================================================
+            FORM ELEMENTS
+        ============================================================ */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--gray-700);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid var(--gray-200);
+        border-radius: var(--border-radius-md);
+        font-size: 1rem;
+        color: var(--gray-900);
+        background: #ffffff;
+        transition: all var(--transition-base);
+        font-weight: 500;
+    }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+    .form-input-wrapper {
+        position: relative;
+    }
+
+    .form-input-icon {
+        position: absolute;
+        right: 0.875rem; /* 14px */
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-500);
+        cursor: pointer;
+        transition: color var(--transition-base);
+    }
+
+        .form-input-icon:hover {
+            color: var(--primary-600);
+        }
+
+    /* ============================================================
+            ALERTS
+        ============================================================ */
+    .alert {
+        padding: 1rem;
+        border-radius: var(--border-radius-lg);
+        border-left-width: 4px;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .alert-info {
+        background-color: var(--primary-50);
+        border-color: var(--primary-500);
+        color: var(--primary-700);
+    }
+
+    .alert i {
+        font-size: 1.25rem;
+    }
+
+    /* ============================================================
+            FORM FOOTER (reusing modal-footer style)
+        ============================================================ */
+    .form-footer {
+        padding: 1.5rem 0 0 0; /* Adjusted padding */
+        background: var(--gray-50);
+        border-top: 2px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1.5rem; /* Added margin-top */
+        background: #ffffff; /* Override background */
+    }
+
+    /* ============================================================
+            SPINNER (for buttons)
+        ============================================================ */
+    .spinner-sm {
+        display: inline-block;
+        width: 1.25rem; /* 20px */
+        height: 1.25rem; /* 20px */
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #ffffff;
+        border-radius: var(--border-radius-full);
+        animation: spin 0.8s linear infinite;
+    }
+
+    .btn-secondary .spinner-sm {
+        border: 3px solid var(--gray-400);
+        border-top-color: var(--gray-700);
+    }
+
+</style>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    [REFACTORED] PAGE HEADER
+    ═══════════════════════════════════════════════════════════════
+-->
+<div class="page-header">
+    <div class="page-header-content">
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <div class="page-header-icon">
+                <i class="fas fa-cog"></i>
+            </div>
+            <div class="page-header-text">
+                <h1>Settings</h1>
+                <p>Manage your account settings and preferences</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    [REFACTORED] CONTENT CONTAINER
+    ═══════════════════════════════════════════════════════════════
+-->
+<div x-data="{ activeTab: 'profile' }">
+    <div class="content-container">
+        <!-- Using .content-container for consistent styling -->
+        <div class="border-b border-gray-200">
+            <nav class="flex -mb-px" style="padding: 0 2rem;">
+                <!-- Added padding -->
+                <button @@click="activeTab = 'profile'"
+                        :class="activeTab === 'profile' ? 'border-indigo-600 text-indigo-600 bg-indigo-50 px-6 py-4 font-semibold border-b-2 transition-all duration-200 flex items-center gap-2' : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300 px-6 py-4 font-semibold border-b-2 transition-all duration-200 flex items-center gap-2'">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </button>
+
+                <button @@click="activeTab = 'security'"
+                        :class="activeTab === 'security' ? 'border-indigo-600 text-indigo-600 bg-indigo-50 px-6 py-4 font-semibold border-b-2 transition-all duration-200 flex items-center gap-2' : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300 px-6 py-4 font-semibold border-b-2 transition-all duration-200 flex items-center gap-2'">
+                    <i class="fas fa-lock"></i>
+                    <span>Security</span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="p-8" x-data="settingsData()">
+            <!-- Profile Tab -->
+            <div x-show="activeTab === 'profile'" x-transition class="space-y-6">
+                <div class="flex items-center gap-6 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
+                    <div class="avatar-xl flex-shrink-0">
+                        <span x-text="getInitials(profile.userName)"></span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-gray-900" x-text="profile.userName" style="font-size: 2rem; font-weight: 800;"></h3>
+                        <p class="text-gray-600" x-text="profile.email" style="font-size: 1rem;"></p>
+                        <div class="flex items-center gap-2 mt-2">
+                            <span class="badge badge-success" x-show="profile.emailConfirmed">
+                                <i class="fas fa-check-circle"></i>Verified
+                            </span>
+                            <span class="badge badge-warning" x-show="!profile.emailConfirmed">
+                                <i class="fas fa-exclamation-circle"></i>Not Verified
+                            </span>
+                            <template x-for="role in profile.roles" :key="role">
+                                <span class="badge badge-purple">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span x-text="role"></span>
+                                </span>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Form -->
+                <div class="space-y-4">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input type="text" x-model="profile.userName" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" x-model="profile.email" class="form-input" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" x-model="profile.phoneNumber" class="form-input" placeholder="+1234567890">
+                    </div>
+
+                    <!-- [REFACTORED] Form Footer -->
+                    <div class="form-footer">
+                        <button type="button" @@click="loadProfile" class="btn btn-secondary" :disabled="profileLoading">
+                            <i class="fas fa-undo"></i>Reset
+                        </button>
+                        <button type="button" @@click="updateProfile" class="btn btn-primary" :disabled="profileLoading">
+                            <span x-show="!profileLoading">
+                                <i class="fas fa-save"></i>Save Changes
+                            </span>
+                            <span x-show="profileLoading" class="spinner-sm"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Tab -->
+            <div x-show="activeTab === 'security'" x-transition class="space-y-6">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>Password Security</strong>
+                        <p class="text-sm">Choose a strong password with at least 8 characters, including uppercase, lowercase, numbers, and symbols.</p>
+                    </div>
+                </div>
+
+                <!-- Password Form -->
+                <div class="space-y-4 max-w-2xl">
+                    <div class="form-group">
+                        <label class="form-label">Current Password</label>
+                        <div class="form-input-wrapper">
+                            <input x-bind:type="showCurrentPassword ? 'text' : 'password'"
+                                   x-model="passwordForm.currentPassword"
+                                   class="form-input"
+                                   required>
+                            <i :class="showCurrentPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
+                               @@click="showCurrentPassword = !showCurrentPassword"
+                               class="form-input-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">New Password</label>
+                        <div class="form-input-wrapper">
+                            <input x-bind:type="showNewPassword ? 'text' : 'password'"
+                                   x-model="passwordForm.newPassword"
+                                   class="form-input"
+                                   required>
+                            <i :class="showNewPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
+                               @@click="showNewPassword = !showNewPassword"
+                               class="form-input-icon"></i>
+                        </div>
+                        <!-- Password strength indicators (from original file) -->
+                        <div class="mt-2 space-y-1">
+                            <div class="flex items-center gap-2 text-sm">
+                                <i :class="passwordForm.newPassword.length >= 8 ? 'fas fa-check-circle text-green-600' : 'fas fa-circle text-gray-300'"></i>
+                                <span :class="passwordForm.newPassword.length >= 8 ? 'text-green-700' : 'text-gray-600'">At least 8 characters</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <i :class="/[A-Z]/.test(passwordForm.newPassword) ? 'fas fa-check-circle text-green-600' : 'fas fa-circle text-gray-300'"></i>
+                                <span :class="/[A-Z]/.test(passwordForm.newPassword) ? 'text-green-700' : 'text-gray-600'">Contains uppercase letter</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <i :class="/[0-9]/.test(passwordForm.newPassword) ? 'fas fa-check-circle text-green-600' : 'fas fa-circle text-gray-300'"></i>
+                                <span :class="/[0-9]/.test(passwordForm.newPassword) ? 'text-green-700' : 'text-gray-600'">Contains number</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Confirm New Password</label>
+                        <div class="form-input-wrapper">
+                            <input x-bind:type="showConfirmPassword ? 'text' : 'password'"
+                                   x-model="passwordForm.confirmPassword"
+                                   class="form-input"
+                                   required>
+                            <i :class="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
+                               @@click="showConfirmPassword = !showConfirmPassword"
+                               class="form-input-icon"></i>
+                        </div>
+                        <p x-show="passwordForm.newPassword && passwordForm.confirmPassword && passwordForm.newPassword !== passwordForm.confirmPassword"
+                           class="text-red-600 text-sm mt-1" style="color: var(--danger-600); font-weight: 600;">
+                            <i class="fas fa-exclamation-circle"></i> Passwords do not match
+                        </p>
+                    </div>
+
+                    <!-- [REFACTORED] Form Footer -->
+                    <div class="form-footer">
+                        <button type="button" @@click="resetPasswordForm" class="btn btn-secondary">
+                            <i class="fas fa-times"></i>Cancel
+                        </button>
+                        <button type="button" @@click="changePassword" class="btn btn-primary" :disabled="passwordLoading || !passwordForm.newPassword || passwordForm.newPassword !== passwordForm.confirmPassword">
+                            <span x-show="!passwordLoading">
+                                <i class="fas fa-key"></i>Change Password
+                            </span>
+                            <span x-show="passwordLoading" class="spinner-sm"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Preserved all original Alpine.js logic -->
+    <script>
+        function settingsData() {
+            return {
+                profile: {
+                    userName: '',
+                    email: '',
+                    phoneNumber: '',
+                    emailConfirmed: false,
+                    roles: []
+                },
+                passwordForm: {
+                    currentPassword: '',
+                    newPassword: '',
+                    confirmPassword: ''
+                },
+                profileLoading: false,
+                passwordLoading: false,
+                showCurrentPassword: false,
+                showNewPassword: false,
+                showConfirmPassword: false,
+
+                init() {
+                    this.loadProfile();
+                },
+
+                async loadProfile() {
+                    try {
+                        const response = await fetch('/api/settings/profile');
+                        if (!response.ok) throw new Error('Failed to load profile');
+                        this.profile = await response.json();
+                    } catch (error) {
+                        console.error('Error loading profile:', error);
+                        showToast('Failed to load profile', 'error');
+                    }
+                },
+
+                async updateProfile() {
+                    this.profileLoading = true;
+                    try {
+                        const response = await fetch('/api/settings/Updateprofilee', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(this.profile)
+                        });
+                        const result = await response.json();
+
+                        if (!response.ok) {
+                            throw new Error(result.message || 'Failed to update profile');
+                        }
+
+                        showToast('Profile updated successfully', 'success');
+                        await this.loadProfile();
+                    } catch (error) {
+                        console.error('Error updating profile:', error);
+                        showToast(error.message || 'Failed to update profile', 'error');
+                    } finally {
+                        this.profileLoading = false;
+                    }
+                },
+
+                async changePassword() {
+                    if (this.passwordForm.newPassword !== this.passwordForm.confirmPassword) {
+                        showToast('Passwords do not match', 'warning');
+                        return;
+                    }
+
+                    this.passwordLoading = true;
+                    try {
+                        const response = await fetch('/api/settings/password', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(this.passwordForm)
+                        });
+                        const result = await response.json();
+
+                        if (!response.ok) {
+                            // Display detailed error messages if available
+                            if (result.errors && Array.isArray(result.errors) && result.errors.length > 0) {
+                                result.errors.forEach(err => showToast(err, 'error'));
+                            } else {
+                                throw new Error(result.message || 'Failed to change password');
+                            }
+                            return;
+                        }
+
+                        showToast('Password changed successfully', 'success');
+                        this.resetPasswordForm();
+                    } catch (error) {
+                        console.error('Error changing password:', error);
+                        showToast(error.message || 'Failed to change password', 'error');
+                    } finally {
+                        this.passwordLoading = false;
+                    }
+                },
+
+                resetPasswordForm() {
+                    this.passwordForm = {
+                        currentPassword: '',
+                        newPassword: '',
+                        confirmPassword: ''
+                    };
+                },
+
+                getInitials(name) {
+                    if (!name) return '??';
+                    const parts = name.split(' ');
+                    if (parts.length >= 2) {
+                        return (parts[0][0] + parts[1][0]).toUpperCase();
+                    }
+                    return name.substring(0, 2).toUpperCase();
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+             // Fallback for showToast if not defined from _Layout
+            if (typeof showToast === 'undefined') {
+                console.warn("showToast function is not defined. Using fallback.");
+                window.showToast = function(message, type) {
+                    alert(`(${type}): ${message}`);
+                }
+            }
+        });
+    </script>
+}

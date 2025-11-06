@@ -1,0 +1,2266 @@
+﻿@{
+    ViewData["Title"] = "Customers Management";
+}
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    PROFESSIONAL CSS STYLES
+    ═══════════════════════════════════════════════════════════════
+-->
+<style>
+    /* ============================================================
+           CSS VARIABLES
+        ============================================================ */
+    :root {
+        --primary-50: #EEF2FF;
+        --primary-100: #E0E7FF;
+        --primary-500: #6366F1;
+        --primary-600: #4F46E5;
+        --primary-700: #4338CA;
+        --primary-800: #3730A3;
+        --success-50: #ECFDF5;
+        --success-100: #D1FAE5;
+        --success-500: #10B981;
+        --success-600: #059669;
+        --warning-50: #FEF3C7;
+        --warning-100: #FDE68A;
+        --warning-500: #F59E0B;
+        --warning-600: #D97706;
+        --danger-50: #FEE2E2;
+        --danger-100: #FECACA;
+        --danger-500: #EF4444;
+        --danger-600: #DC2626;
+        --gray-50: #F9FAFB;
+        --gray-100: #F3F4F6;
+        --gray-200: #E5E7EB;
+        --gray-300: #D1D5DB;
+        --gray-400: #9CA3AF;
+        --gray-500: #6B7280;
+        --gray-600: #4B5563;
+        --gray-700: #374151;
+        --gray-800: #1F2937;
+        --gray-900: #111827;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        --border-radius-md: 0.5rem;
+        --border-radius-lg: 0.75rem;
+        --border-radius-xl: 1rem;
+        --border-radius-full: 9999px;
+        --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================================
+           ANIMATIONS
+        ============================================================ */
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    @@keyframes slideDown {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    @@keyframes pulse {
+        0%, 100%
+
+    {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    }
+
+    /* ============================================================
+           PAGE HEADER
+        ============================================================ */
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: var(--border-radius-xl);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-xl);
+        position: relative;
+        overflow: hidden;
+        animation: slideDown var(--transition-base);
+    }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.5;
+        }
+
+    .page-header-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .page-header-icon {
+        width: 4rem;
+        height: 4rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: var(--border-radius-xl);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        transition: transform var(--transition-base);
+    }
+
+        .page-header-icon:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .page-header-icon i {
+            font-size: 2rem;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+    .page-header-text h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-header-text p {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.5rem 0 0 0;
+        font-weight: 500;
+    }
+    /* ============================================================
+           [NEW] STYLED TABLE DATA CELLS
+        ============================================================ */
+    .data-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem; /* 4px gap between label and value */
+    }
+
+    .data-label {
+        font-size: 0.75rem; /* 12px */
+        font-weight: 700;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        white-space: nowrap;
+    }
+
+    .data-value {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem; /* 10px */
+        font-size: 0.95rem; /* 15px */
+        font-weight: 500;
+        color: var(--gray-900);
+    }
+
+        /* لتوحيد حجم الأيقونات ومكانها */
+        .data-value i.fas {
+            width: 1.1rem; /* 18px */
+            text-align: center;
+            font-size: 0.9rem; /* 14px */
+        }
+
+        /* ألوان الأيقونات */
+        .data-value i.fa-phone,
+        .data-value i.fa-envelope {
+            color: var(--primary-600);
+        }
+
+        .data-value i.fa-clock {
+            color: var(--gray-500);
+        }
+
+        .data-value span {
+            /* عشان لو الإيميل طويل ميضربش التصميم */
+            word-break: break-word;
+        }
+
+    .header-actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 0.875rem 1.75rem;
+        border-radius: var(--border-radius-full);
+        font-size: 1rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all var(--transition-base);
+        border: none;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        box-shadow: var(--shadow-md);
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        color: #ffffff;
+    }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-700), var(--primary-800));
+        }
+
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+    }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+    .btn-success {
+        background: linear-gradient(135deg, var(--success-500), var(--success-600));
+        color: #ffffff;
+    }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, var(--success-600), #047857);
+        }
+
+    .btn-danger {
+        background: linear-gradient(135deg, var(--danger-500), var(--danger-600));
+        color: #ffffff;
+    }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, var(--danger-600), #B91C1C);
+        }
+
+    /* ============================================================
+           STATISTICS CARDS
+        ============================================================ */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: #ffffff;
+        border-radius: var(--border-radius-xl);
+        padding: 1.75rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--gray-200);
+        position: relative;
+        overflow: hidden;
+        transition: all var(--transition-base);
+        animation: fadeIn var(--transition-base);
+    }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            transition: width var(--transition-base);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+    .stat-card-primary::before {
+        background: linear-gradient(180deg, var(--primary-500), var(--primary-700));
+    }
+
+    .stat-card-success::before {
+        background: linear-gradient(180deg, var(--success-500), var(--success-600));
+    }
+
+    .stat-card-warning::before {
+        background: linear-gradient(180deg, var(--warning-500), var(--warning-600));
+    }
+
+    .stat-card-info::before {
+        background: linear-gradient(180deg, #3B82F6, #2563EB);
+    }
+
+    .stat-card:hover::before {
+        width: 100%;
+        opacity: 0.05;
+    }
+
+    .stat-card-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+    }
+
+    .stat-icon {
+        width: 4.5rem;
+        height: 4.5rem;
+        border-radius: var(--border-radius-xl);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform var(--transition-base);
+    }
+
+    .stat-card:hover .stat-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .stat-icon-primary {
+        background: linear-gradient(135deg, var(--primary-100), var(--primary-200));
+        color: var(--primary-600);
+    }
+
+    .stat-icon-success {
+        background: linear-gradient(135deg, var(--success-100), var(--success-50));
+        color: var(--success-600);
+    }
+
+    .stat-icon-warning {
+        background: linear-gradient(135deg, var(--warning-100), var(--warning-50));
+        color: var(--warning-600);
+    }
+
+    .stat-icon-info {
+        background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
+        color: #2563EB;
+    }
+
+    .stat-icon i {
+        font-size: 2rem;
+    }
+
+    .stat-info {
+        flex: 1;
+        text-align: right;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--gray-600);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--gray-900);
+        line-height: 1;
+    }
+
+    .stat-description {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        margin-top: 0.5rem;
+        font-weight: 500;
+    }
+
+    /* ============================================================
+           TABLE CONTAINER
+        ============================================================ */
+    .table-container {
+        background: #ffffff;
+        border-radius: var(--border-radius-xl);
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--gray-200);
+        overflow: hidden;
+        animation: fadeIn var(--transition-base);
+    }
+
+    .table-filters {
+        padding: 1.75rem 2rem;
+        background: linear-gradient(to right, var(--gray-50), #ffffff);
+        border-bottom: 2px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .filters-group {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        min-width: 300px;
+    }
+
+    .search-wrapper {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-400);
+        font-size: 1rem;
+        pointer-events: none;
+        transition: color var(--transition-base);
+    }
+
+    .filter-input {
+        width: 100%;
+        height: 3rem;
+        padding: 0 1rem 0 3rem;
+        border: 2px solid var(--gray-200);
+        border-radius: var(--border-radius-full);
+        font-size: 0.95rem;
+        color: var(--gray-900);
+        background: #ffffff;
+        transition: all var(--transition-base);
+        font-weight: 500;
+    }
+
+        .filter-input:focus {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+            .filter-input:focus + .search-icon {
+                color: var(--primary-500);
+            }
+
+    .filter-select {
+        height: 3rem;
+        padding: 0 2.5rem 0 1rem;
+        border: 2px solid var(--gray-200);
+        border-radius: var(--border-radius-full);
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--gray-700);
+        background: #ffffff url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="%234B5563"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>') no-repeat right 0.75rem center;
+        background-size: 1.25rem;
+        appearance: none;
+        cursor: pointer;
+        transition: all var(--transition-base);
+        min-width: 160px;
+    }
+
+        .filter-select:focus {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+    /* ============================================================
+           TABLE
+        ============================================================ */
+    .table-wrapper {
+        overflow-x: auto;
+        max-height: 800px;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: linear-gradient(180deg, var(--gray-50) 0%, #ffffff 100%);
+        }
+
+            .table thead tr {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            }
+
+        .table th {
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--gray-700);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            border-bottom: 2px solid var(--gray-300);
+            background: var(--gray-50);
+        }
+
+            .table th i {
+                margin-right: 0.5rem;
+                color: var(--primary-600);
+            }
+
+        .table tbody tr {
+            transition: all 150ms;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+            .table tbody tr:hover {
+                background: linear-gradient(90deg, var(--primary-50) 0%, transparent 100%);
+                transform: scale(1.01);
+                box-shadow: var(--shadow-sm);
+            }
+
+        .table td {
+            padding: 1.25rem 1.5rem;
+            font-size: 0.95rem;
+            color: var(--gray-700);
+            vertical-align: middle;
+        }
+
+    /* ============================================================
+           AVATAR & CUSTOMER INFO
+        ============================================================ */
+    .customer-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .avatar {
+        width: 3rem;
+        height: 3rem;
+        border-radius: var(--border-radius-full);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #ffffff;
+        background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+        box-shadow: var(--shadow-md);
+        transition: transform var(--transition-base);
+    }
+
+    .table tbody tr:hover .avatar {
+        transform: scale(1.15);
+    }
+
+    .customer-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .customer-name {
+        font-weight: 700;
+        color: var(--gray-900);
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .customer-id {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        font-weight: 600;
+    }
+
+    /* ============================================================
+           BADGES
+        ============================================================ */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        border-radius: var(--border-radius-full);
+        white-space: nowrap;
+        letter-spacing: 0.025em;
+        text-transform: uppercase;
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-base);
+    }
+
+        .badge i {
+            font-size: 0.9rem;
+        }
+
+    .badge-new {
+        background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
+        color: #1E40AF;
+        border: 2px solid #3B82F6;
+    }
+
+    .badge-warning {
+        background: linear-gradient(135deg, var(--warning-100), var(--warning-50));
+        color: var(--warning-600);
+        border: 2px solid var(--warning-600);
+    }
+
+    .badge-success {
+        background: linear-gradient(135deg, var(--success-100), var(--success-50));
+        color: var(--success-600);
+        border: 2px solid var(--success-600);
+    }
+
+    .badge-failed {
+        background: linear-gradient(135deg, var(--danger-100), var(--danger-50));
+        color: var(--danger-600);
+        border: 2px solid var(--danger-600);
+    }
+
+    .badge-contacted {
+        background: linear-gradient(135deg, var(--primary-100), var(--primary-50));
+        color: var(--primary-600);
+        border: 2px solid var(--primary-600);
+    }
+
+    .badge-noanswer {
+        background: linear-gradient(135deg, var(--gray-200), var(--gray-100));
+        color: var(--gray-700);
+        border: 2px solid var(--gray-400);
+    }
+
+    /* ============================================================
+           ACTION BUTTONS
+        ============================================================ */
+    .table-actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .table-action-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: var(--border-radius-lg);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: #ffffff;
+        border: none;
+        cursor: pointer;
+        transition: all var(--transition-base);
+        box-shadow: var(--shadow-md);
+    }
+
+        .table-action-btn:hover {
+            transform: translateY(-4px) scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+    .table-action-view {
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+    }
+
+        .table-action-view:hover {
+            background: linear-gradient(135deg, var(--primary-700), var(--primary-800));
+        }
+
+    .table-action-call {
+        background: linear-gradient(135deg, var(--success-500), var(--success-600));
+    }
+
+        .table-action-call:hover {
+            background: linear-gradient(135deg, var(--success-600), #047857);
+        }
+
+    .table-action-email {
+        background: linear-gradient(135deg, #3B82F6, #2563EB);
+    }
+
+        .table-action-email:hover {
+            background: linear-gradient(135deg, #2563EB, #1D4ED8);
+        }
+
+    .table-action-edit {
+        background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+    }
+
+        .table-action-edit:hover {
+            background: linear-gradient(135deg, var(--warning-600), #B45309);
+        }
+
+    .table-action-delete {
+        background: linear-gradient(135deg, var(--danger-500), var(--danger-600));
+    }
+
+        .table-action-delete:hover {
+            background: linear-gradient(135deg, var(--danger-600), #B91C1C);
+        }
+
+    /* ============================================================
+           PAGINATION
+        ============================================================ */
+    .pagination-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.75rem 2rem;
+        background: linear-gradient(to right, #ffffff, var(--gray-50));
+        border-top: 2px solid var(--gray-200);
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .pagination-info {
+        font-size: 0.95rem;
+        color: var(--gray-600);
+        font-weight: 600;
+    }
+
+        .pagination-info span {
+            color: var(--primary-600);
+            font-weight: 800;
+        }
+
+    .pagination-controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .pagination-btn {
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: var(--border-radius-lg);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        color: #ffffff;
+        border: none;
+        cursor: pointer;
+        transition: all var(--transition-base);
+        box-shadow: var(--shadow-md);
+        font-weight: 700;
+    }
+
+        .pagination-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .pagination-btn:disabled {
+            background: var(--gray-300);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+    /* ============================================================
+           MODALS
+        ============================================================ */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 1.5rem;
+        animation: fadeIn var(--transition-base);
+    }
+
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+    .modal-content {
+        background: #ffffff;
+        border-radius: var(--border-radius-xl);
+        box-shadow: var(--shadow-xl);
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        animation: fadeIn var(--transition-base);
+        border: 1px solid var(--gray-200);
+    }
+
+    .modal-footer .btn-secondary {
+        background: var(--gray-100); /* خلفية رمادية فاتحة */
+        color: var(--gray-700); /* لون خط رمادي غامق */
+        border: 2px solid var(--gray-300); /* إطار واضح */
+        backdrop-filter: none; /* إلغاء الفلتر الشفاف */
+    }
+
+        .modal-footer .btn-secondary:hover {
+            background: var(--gray-200); /* تغميق اللون عند الـ Hover */
+            color: var(--gray-900);
+            border-color: var(--gray-400);
+        }
+
+    .modal-header {
+        padding: 2rem;
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+    .modal-close {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: var(--border-radius-full);
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all var(--transition-base);
+    }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+    .modal-body {
+        padding: 2rem;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .modal-footer {
+        padding: 1.5rem 2rem;
+        background: var(--gray-50);
+        border-top: 2px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 1rem;
+    }
+
+    /* ============================================================
+           FORM ELEMENTS
+        ============================================================ */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--gray-700);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid var(--gray-200);
+        border-radius: var(--border-radius-md);
+        font-size: 1rem;
+        color: var(--gray-900);
+        background: #ffffff;
+        transition: all var(--transition-base);
+        font-weight: 500;
+    }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        .form-input:disabled {
+            background: var(--gray-100);
+            cursor: not-allowed;
+        }
+
+    .form-textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    /* ============================================================
+           LOADING & EMPTY STATES
+        ============================================================ */
+    .loading-container {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .spinner {
+        display: inline-block;
+        width: 4rem;
+        height: 4rem;
+        border: 5px solid var(--primary-200);
+        border-top-color: var(--primary-600);
+        border-radius: var(--border-radius-full);
+        animation: spin 0.8s linear infinite;
+    }
+
+    @@keyframes spin {
+        to
+
+    {
+        transform: rotate(360deg);
+    }
+
+    }
+
+    .loading-text {
+        color: var(--gray-600);
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .empty-icon {
+        font-size: 5rem;
+        color: var(--gray-300);
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-text {
+        font-size: 1.25rem;
+        color: var(--gray-500);
+        font-weight: 600;
+    }
+
+    /* ============================================================
+           IMPORT/PROGRESS
+        ============================================================ */
+    .progress-bar {
+        width: 100%;
+        height: 0.75rem;
+        background: var(--gray-200);
+        border-radius: var(--border-radius-full);
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary-600), var(--primary-500));
+        transition: width 0.3s;
+    }
+
+    .import-result-card {
+        padding: 1.25rem;
+        border-radius: var(--border-radius-lg);
+        margin-bottom: 1rem;
+    }
+
+    .import-result-success {
+        background: var(--success-50);
+        border: 2px solid var(--success-600);
+    }
+
+    .import-result-error {
+        background: var(--danger-50);
+        border: 2px solid var(--danger-600);
+    }
+
+    /* ============================================================
+           RESPONSIVE
+        ============================================================ */
+    @@media (max-width: 768px) {
+        .page-header
+
+    {
+        padding: 1.5rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filters-group {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .search-wrapper {
+        max-width: 100%;
+    }
+
+    .table th,
+    .table td {
+        padding: 1rem;
+        font-size: 0.85rem;
+    }
+
+    }
+</style>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    PAGE HEADER
+    ═══════════════════════════════════════════════════════════════
+-->
+<div class="page-header">
+    <div class="page-header-content">
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <div class="page-header-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="page-header-text">
+                <h1>Customers Management</h1>
+                <p>Add, edit, and manage all customers</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button id="importCustomersBtn" class="btn btn-success">
+                <i class="fas fa-file-excel"></i>
+                <span>Import Excel</span>
+            </button>
+            <button id="refreshCustomersBtn" class="btn btn-secondary">
+                <i class="fas fa-sync-alt"></i>
+                <span>Refresh</span>
+            </button>
+            <button id="addNewCustomerBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                <span>Add Customer</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    STATISTICS CARDS
+    ═══════════════════════════════════════════════════════════════
+-->
+<div class="stats-grid">
+    <div class="stat-card stat-card-primary">
+        <div class="stat-card-content">
+            <div class="stat-icon stat-icon-primary">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-label">Total Customers</div>
+                <div class="stat-value" id="totalCount">0</div>
+                <div class="stat-description">All customers</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card stat-card-success">
+        <div class="stat-card-content">
+            <div class="stat-icon stat-icon-success">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-label">New</div>
+                <div class="stat-value" id="newCount">0</div>
+                <div class="stat-description">Status = New</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card stat-card-warning">
+        <div class="stat-card-content">
+            <div class="stat-icon stat-icon-warning">
+                <i class="fas fa-phone-volume"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-label">Calling</div>
+                <div class="stat-value" id="callingCount">0</div>
+                <div class="stat-description">Status = Calling</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card stat-card-info">
+        <div class="stat-card-content">
+            <div class="stat-icon stat-icon-info">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-label">Booked</div>
+                <div class="stat-value" id="bookedCount">0</div>
+                <div class="stat-description">Status = Booked</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    TABLE CONTAINER
+    ═══════════════════════════════════════════════════════════════
+-->
+<div class="table-container">
+    <div class="table-filters">
+        <div class="filters-group">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text"
+                       id="searchCustomerInput"
+                       placeholder="Search by name, phone, or email..."
+                       class="filter-input">
+            </div>
+
+            <select id="filterCustomerStatus" class="filter-select">
+                <option value="">All Status</option>
+                <option value="0">New</option>
+                <option value="1">Calling</option>
+                <option value="2">Booked</option>
+                <option value="3">Failed</option>
+                <option value="4">Contacted</option>
+                <option value="5">No Answer</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-user"></i>Customer</th>
+                    <th><i class="fas fa-phone"></i>Phone Number</th>
+                    <th><i class="fas fa-envelope"></i>Email</th>
+                    <th><i class="fas fa-info-circle"></i>Status</th>
+                    <th><i class="fas fa-clock"></i>Created At</th>
+                    <th style="text-align: center;"><i class="fas fa-cog"></i>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="customersTableBody">
+                <tr>
+                    <td colspan="6">
+                        <div class="loading-container">
+                            <div class="spinner"></div>
+                            <p class="loading-text">Loading customers...</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="customerPaginationControls" class="pagination-container"></div>
+</div>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    MODALS
+    ═══════════════════════════════════════════════════════════════
+-->
+<!-- Customer Details Modal -->
+<div id="customerDetailsModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-info-circle"></i>Customer Details</h3>
+            <button onclick="closeModal('customerDetailsModal')" class="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div id="customerDetailsContent"></div>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeModal('customerDetailsModal')" class="btn btn-secondary">
+                <i class="fas fa-times"></i>Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Send Email Modal -->
+<div id="sendEmailModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-paper-plane"></i>Send Email</h3>
+            <button onclick="closeModal('sendEmailModal')" class="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="emailForm">
+                <input type="hidden" id="emailCustomerId" />
+                <div class="form-group">
+                    <label for="emailToName" class="form-label">To (Name):</label>
+                    <input type="text" id="emailToName" class="form-input" readonly />
+                </div>
+                <div class="form-group">
+                    <label for="emailToAddress" class="form-label">To (Email):</label>
+                    <input type="email" id="emailToAddress" class="form-input" readonly />
+                </div>
+                <div class="form-group">
+                    <label for="emailSubject" class="form-label">Subject:</label>
+                    <input type="text" id="emailSubject" placeholder="Enter email subject" class="form-input" required />
+                </div>
+                <div class="form-group">
+                    <label for="emailBody" class="form-label">Body:</label>
+                    <textarea id="emailBody" placeholder="Write your message..." class="form-textarea" required></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeModal('sendEmailModal')" class="btn btn-secondary">
+                <i class="fas fa-times"></i>Cancel
+            </button>
+            <button onclick="submitSendEmail()" class="btn btn-primary">
+                <i class="fas fa-paper-plane"></i>Send Email
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Customer Modal -->
+<div id="customerModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3 id="customerModalTitle"><i class="fas fa-user-plus"></i>Add New Customer</h3>
+            <button onclick="closeModal('customerModal')" class="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="customerForm">
+                <input type="hidden" id="customerId" />
+                <div class="form-group">
+                    <label for="customerName" class="form-label">Full Name:</label>
+                    <input type="text" id="customerName" class="form-input" required />
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="customerPhone" class="form-label">Phone Number:</label>
+                        <input type="tel" id="customerPhone" class="form-input" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="customerEmail" class="form-label">Email:</label>
+                        <input type="email" id="customerEmail" class="form-input" />
+                    </div>
+                </div>
+                <div id="statusEditBlock" class="form-group hidden">
+                    <label for="customerStatus" class="form-label">Status:</label>
+                    <select id="customerStatus" class="form-select">
+                        <option value="0">New</option>
+                        <option value="1">Calling</option>
+                        <option value="2">Booked</option>
+                        <option value="3">Failed</option>
+                        <option value="4">Contacted</option>
+                        <option value="5">No Answer</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeModal('customerModal')" class="btn btn-secondary">
+                <i class="fas fa-times"></i>Cancel
+            </button>
+            <button onclick="submitCustomerForm()" class="btn btn-primary">
+                <i class="fas fa-save"></i>Save Changes
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Import Modal -->
+<div id="importModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-header">
+            <h3><i class="fas fa-file-excel"></i>Import Customers</h3>
+            <button onclick="closeModal('importModal')" class="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div id="importUploadSection">
+                <div style="padding: 1rem; background: #EFF6FF; border: 2px solid #3B82F6; border-radius: 0.75rem; margin-bottom: 1.5rem;">
+                    <p style="color: #1E40AF; font-weight: 600;">
+                        <i class="fas fa-info-circle"></i>
+                        Required Columns: Name, PhoneNumber, Email (optional)
+                    </p>
+                </div>
+                <form id="importForm">
+                    <div class="form-group">
+                        <label for="excelFile" class="form-label">Select File (.xlsx, .xls, .csv):</label>
+                        <input type="file" id="excelFile" accept=".xlsx,.xls,.csv" class="form-input" required />
+                    </div>
+                </form>
+            </div>
+            <div id="importProgressSection" class="hidden">
+                <p style="color: var(--gray-600); margin-bottom: 1rem;">Uploading and processing...</p>
+                <div class="progress-bar">
+                    <div id="importProgressBar" class="progress-bar-fill" style="width: 0%"></div>
+                </div>
+            </div>
+            <div id="importResultSection" class="hidden"></div>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeModal('importModal')" class="btn btn-secondary">
+                <i class="fas fa-times"></i>Cancel
+            </button>
+            <button id="submitImportBtn" onclick="submitImportFile()" class="btn btn-success">
+                <i class="fas fa-upload"></i>Upload & Import
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteConfirmModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header" style="background: linear-gradient(135deg, var(--danger-600), #B91C1C);">
+            <h3><i class="fas fa-exclamation-triangle"></i>Confirm Deletion</h3>
+            <button onclick="closeModal('deleteConfirmModal')" class="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p style="color: var(--gray-700); margin-bottom: 1rem;">Are you sure you want to delete this customer?</p>
+            <div style="padding: 1rem; background: var(--danger-50); border: 2px solid var(--danger-600); border-radius: 0.75rem;">
+                <p id="deleteCustomerName" style="font-weight: 700; color: var(--gray-900);"></p>
+            </div>
+            <p style="color: var(--danger-600); margin-top: 1rem; font-size: 0.9rem;">
+                <i class="fas fa-info-circle"></i> This action cannot be undone.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeModal('deleteConfirmModal')" class="btn btn-secondary">
+                <i class="fas fa-times"></i>Cancel
+            </button>
+            <button onclick="confirmDelete()" class="btn btn-danger">
+                <i class="fas fa-trash"></i>Yes, Delete
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+
+    <script>
+                // ═══════════════════════════════════════════════════════════════
+                // GLOBAL VARIABLES
+                // ═══════════════════════════════════════════════════════════════
+                const customerStatusMap = {
+                    0: { name: "New", class: "badge-new", icon: "fa-star" },
+                    1: { name: "Calling", class: "badge-warning", icon: "fa-phone-volume" },
+                    2: { name: "Booked", class: "badge-success", icon: "fa-calendar-check" },
+                    3: { name: "Failed", class: "badge-failed", icon: "fa-times-circle" },
+                    4: { name: "Contacted", class: "badge-contacted", icon: "fa-phone" },
+                    5: { name: "No Answer", class: "badge-noanswer", icon: "fa-phone-slash" }
+                };
+
+                let currentPageCustomers = [];
+                let currentPage = 1;
+                let debounceTimer;
+                let signalRConnection;
+                let customerIdToDelete = null;
+
+                // ═══════════════════════════════════════════════════════════════
+                // MODAL FUNCTIONS
+                // ═══════════════════════════════════════════════════════════════
+                function openModal(modalId) {
+                    document.getElementById(modalId).classList.remove('hidden');
+                }
+
+                function closeModal(modalId) {
+                    document.getElementById(modalId).classList.add('hidden');
+                }
+
+                // ═══════════════════════════════════════════════════════════════
+                // HELPER FUNCTIONS
+                // ═══════════════════════════════════════════════════════════════
+                function getInitials(name) {
+                    if (!name) return '??';
+                    const parts = name.trim().split(' ').filter(Boolean);
+                    if (parts.length >= 2) {
+                        return (parts[0][0] + (parts[parts.length - 1][0] ?? '')).toUpperCase();
+                    } else if (parts.length === 1 && parts[0].length > 0) {
+                        return parts[0].substring(0, 2).toUpperCase();
+                    }
+                    return '??';
+                }
+
+                function escapeHtml(text) {
+                    if (typeof text !== 'string') return '';
+                    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+                    return text.replace(/[&<>\"']/g, m => map[m]);
+                }
+
+                async function parseErrorMessage(response) {
+                    try {
+                        const result = await response.json();
+                        if (result && result.message) {
+                            return result.message;
+                        }
+                        if (result && result.errors && Array.isArray(result.errors) && result.errors.length > 0) {
+                            return result.errors.join(', ');
+                        }
+                    } catch (e) { }
+                    return `Request failed with status ${response.status}`;
+                }
+
+                // ═══════════════════════════════════════════════════════════════
+                // LOAD CUSTOMERS
+                // ═══════════════════════════════════════════════════════════════
+                async function loadCustomers(pageNumber = 1) {
+                    currentPage = pageNumber;
+                    const searchTerm = document.getElementById('searchCustomerInput').value;
+                    const status = document.getElementById('filterCustomerStatus').value;
+
+                    document.getElementById('customersTableBody').innerHTML = `
+                        <tr>
+                            <td colspan="6">
+                                <div class="loading-container">
+                                    <div class="spinner"></div>
+                                    <p class="loading-text">Loading customers...</p>
+                                </div>
+                            </td>
+                        </tr>`;
+
+                    document.getElementById('customerPaginationControls').innerHTML = '';
+
+                    const params = new URLSearchParams({
+                        PageNumber: currentPage,
+                        PageSize: 25,
+                        SearchTerm: searchTerm,
+                        Status: status
+                    });
+
+                    try {
+                        const response = await fetch(`/api/customer/paginated?${params.toString()}`);
+
+                        if (response.status === 404) {
+                            currentPageCustomers = [];
+                            renderCustomers([]);
+                            renderPagination(null);
+                            return;
+                        }
+
+                        if (!response.ok) {
+                            const errorMsg = await parseErrorMessage(response);
+                            throw new Error(errorMsg);
+                        }
+
+                        const pagedData = await response.json();
+                        currentPageCustomers = pagedData.items;
+                        renderCustomers(pagedData.items);
+                        renderPagination(pagedData);
+
+                    } catch (error) {
+                        console.error('Error loading customers:', error);
+                        showToast(error.message, 'error');
+                        document.getElementById('customersTableBody').innerHTML = `
+                            <tr>
+                                <td colspan="6">
+                                    <div class="empty-state">
+                                        <i class="fas fa-exclamation-circle empty-icon" style="color: var(--danger-500);"></i>
+                                        <p class="empty-text" style="color: var(--danger-600);">${escapeHtml(error.message)}</p>
+                                    </div>
+                                </td>
+                            </tr>`;
+                    }
+                }
+
+                // ═══════════════════════════════════════════════════════════════
+                // LOAD STATISTICS
+                // ═══════════════════════════════════════════════════════════════
+                async function loadCustomerStatistics() {
+                    try {
+                        const response = await fetch('/api/customer/statistics');
+
+                        if (!response.ok) {
+                            const errorMsg = await parseErrorMessage(response);
+                            throw new Error(errorMsg);
+                        }
+
+                        const stats = await response.json();
+                        document.getElementById('totalCount').textContent = stats.totalCount ?? 0;
+                        document.getElementById('bookedCount').textContent = stats.bookedCount ?? 0;
+                        document.getElementById('callingCount').textContent = stats.callingCount ?? 0;
+                        document.getElementById('newCount').textContent = stats.newCount ?? 0;
+
+                    } catch (error) {
+                        console.error('Error loading statistics:', error);
+                        showToast(error.message, 'warning');
+                        document.getElementById('totalCount').textContent = 'N/A';
+                        document.getElementById('bookedCount').textContent = 'N/A';
+                        document.getElementById('callingCount').textContent = 'N/A';
+                        document.getElementById('newCount').textContent = 'N/A';
+                    }
+                }
+
+                // ═══════════════════════════════════════════════════════════════
+                // RENDER PAGINATION
+                // ═══════════════════════════════════════════════════════════════
+                function renderPagination(pagedData) {
+                    const controlsContainer = document.getElementById('customerPaginationControls');
+
+                    if (!pagedData || pagedData.totalPages <= 1) {
+                        controlsContainer.innerHTML = '';
+                        return;
+                    }
+
+                    const { currentPage, totalPages, totalCount, pageSize, items } = pagedData;
+                    const startItem = (currentPage - 1) * pageSize + 1;
+                    const endItem = startItem + items.length - 1;
+
+                    controlsContainer.innerHTML = `
+                        <div class="pagination-info">
+                            Showing <span>${startItem}</span> to <span>${endItem}</span> of <span>${totalCount}</span> results
+                        </div>
+                        <div class="pagination-controls">
+                            <button onclick="loadCustomers(${currentPage - 1})" class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''}>
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <span style="font-size: 0.95rem; font-weight: 700; color: var(--gray-700); padding: 0 1rem;">
+                                Page ${currentPage} of ${totalPages}
+                            </span>
+                            <button onclick="loadCustomers(${currentPage + 1})" class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''}>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    `;
+                }
+
+                // ═══════════════════════════════════════════════════════════════
+                // RENDER CUSTOMERS TABLE
+                // ═══════════════════════════════════════════════════════════════
+           function renderCustomers(data) {
+            const tbody = document.getElementById('customersTableBody');
+
+            if (data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fas fa-users-slash empty-icon"></i>
+                                <p class="empty-text">No customers found matching your criteria</p>
+                            </div>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tbody.innerHTML = data.map(customer => {
+                const status = customerStatusMap[customer.status] || { name: "Unknown", class: "badge-noanswer", icon: "fa-question" };
+                const createdDate = new Date(customer.createdAt).toLocaleDateString();
+                const customerName = customer.name || 'Unknown';
+                const customerPhone = customer.phoneNumber || 'N/A';
+                const customerEmail = customer.email || 'N/A';
+                const customerId = customer.id;
+                const initials = getInitials(customerName);
+
+                // [MODIFIED] The row structure is now using the new .data-cell styles
+                return `
+                    <tr data-customer-id="${customerId}">
+
+                        <td>
+                            <div class="customer-info">
+                                <div class="avatar">${escapeHtml(initials)}</div>
+                                <div class="customer-details">
+                                    <div class="customer-name">${escapeHtml(customerName)}</div>
+                                    <div class="customer-id">ID: #${customerId}</div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="data-cell">
+                                <div class="data-label">Phone</div>
+                                <div class="data-value">
+                                    <i class="fas fa-phone"></i>
+                                    <span>${escapeHtml(customerPhone)}</span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="data-cell">
+                                <div class="data-label">Email</div>
+                                <div class="data-value">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>${escapeHtml(customerEmail)}</span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="data-cell">
+                                <div class="data-label">Status</div>
+                                <div>
+                                    <span class="badge ${status.class}">
+                                        <i class="fas ${status.icon}"></i>${status.name}
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="data-cell">
+                                <div class="data-label">Created At</div>
+                                <div class="data-value">
+                                    <i class="fas fa-clock"></i>
+                                    <span>${createdDate}</span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="table-actions">
+                                <button onclick="callCustomer(${customerId})" class="table-action-btn table-action-call" title="Start Call">
+                                    <i class="fas fa-phone"></i>
+                                </button>
+                                <button onclick="viewCustomerDetails(${customerId})" class="table-action-btn table-action-view" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="openSendEmailModal(${customerId})" class="table-action-btn table-action-email" title="Send Email">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                                <button onclick="openEditCustomerModal(${customerId})" class="table-action-btn table-action-edit" title="Edit Customer">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="openDeleteConfirmModal(${customerId}, '${escapeHtml(customerName)}')" class="table-action-btn table-action-delete" title="Delete Customer">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+            }).join('');
+        }
+
+                // ═══════════════════════════════════════════════════════════════
+                // CALL CUSTOMER
+                // ═══════════════════════════════════════════════════════════════
+                async function callCustomer(id) {
+                    const customer = currentPageCustomers.find(c => c.id === id);
+                    if (!customer) {
+                        showToast('Cannot find customer', 'error');
+                        return;
+                    }
+                    showToast(`Initiating call to ${customer.name}...`, 'info');
+                    try {
+                        const response = await fetch(`/api/customer/startcall/${id}`, {
+                            method: 'POST'
+                        });
+
+                        if (!response.ok) {
+                            const errorMsg = await parseErrorMessage(response);
+                            throw new Error(errorMsg);
+                        }
+
+                        const result = await response.json();
+                        showToast(result.message || 'Call initiated successfully!', 'success');
+                    } catch (error) {
+                        console.error('Error starting call:', error);
+                        showToast(error.message, 'error');
+                    }
+                }
+
+                // ═══════════════════════════════════════════════════════════════
+                // VIEW CUSTOMER DETAILS
+                // ═══════════════════════════════════════════════════════════════
+                function viewCustomerDetails(id) {
+                    const customer = currentPageCustomers.find(c => c.id === id);
+                    if (!customer) {
+                        showToast('Could not find customer details.', 'error');
+                        return;
+                    }
+
+                    const status = customerStatusMap[customer.status] || { name: "Unknown", class: "badge-noanswer", icon: "fa-question" };
+                    const createdDate = new Date(customer.createdAt).toLocaleString();
+                    const updatedDate = new Date(customer.updatedAt).toLocaleString();
+
+                    document.getElementById('customerDetailsContent').innerHTML = `
+                        <div style="background: linear-gradient(135deg, var(--primary-50), #EDE9FE); padding: 2rem; border-radius: var(--border-radius-lg); margin-bottom: 1.5rem;">
+                            <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1rem;">
+                                <div style="width: 5rem; height: 5rem; border-radius: var(--border-radius-full); background: linear-gradient(135deg, var(--primary-600), var(--primary-700)); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: white; box-shadow: var(--shadow-lg);">
+                                    ${escapeHtml(getInitials(customer.name))}
+                                </div>
+                                <div>
+                                    <h3 style="font-size: 2rem; font-weight: 800; color: var(--gray-900); margin: 0 0 0.75rem 0;">${escapeHtml(customer.name)}</h3>
+                                    <span class="badge ${status.class}"><i class="fas ${status.icon}"></i>${status.name}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
+                            <div style="padding: 1.5rem; background: linear-gradient(135deg, var(--gray-50), #ffffff); border-radius: var(--border-radius-lg); border: 2px solid var(--gray-200);">
+                                <p style="font-size: 0.75rem; font-weight: 700; color: var(--gray-600); text-transform: uppercase; margin-bottom: 0.5rem;">Phone Number</p>
+                                <p style="font-weight: 700; color: var(--gray-900); display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-phone" style="color: var(--primary-600);"></i>${escapeHtml(customer.phoneNumber) || 'N/A'}
+                                </p>
+                            </div>
+
+                            <div style="padding: 1.5rem; background: linear-gradient(135deg, var(--gray-50), #ffffff); border-radius: var(--border-radius-lg); border: 2px solid var(--gray-200);">
+                                <p style="font-size: 0.75rem; font-weight: 700; color: var(--gray-600); text-transform: uppercase; margin-bottom: 0.5rem;">Email Address</p>
+                                <p style="font-weight: 700; color: var(--gray-900); display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-envelope" style="color: var(--primary-600);"></i>${escapeHtml(customer.email) || 'N/A'}
+                                </p>
+                            </div>
+
+                            <div style="padding: 1.5rem; background: linear-gradient(135deg, var(--gray-50), #ffffff); border-radius: var(--border-radius-lg); border: 2px solid var(--gray-200);">
+                                <p style="font-size: 0.75rem; font-weight: 700; color: var(--gray-600); text-transform: uppercase; margin-bottom: 0.5rem;">Created At</p>
+                                <p style="font-weight: 700; color: var(--gray-900); display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-clock" style="color: #3B82F6;"></i>${createdDate}
+                                </p>
+                            </div>
+
+                            <div style="padding: 1.5rem; background: linear-gradient(135deg, var(--gray-50), #ffffff); border-radius: var(--border-radius-lg); border: 2px solid var(--gray-200);">
+                                <p style="font-size: 0.75rem; font-weight: 700; color: var(--gray-600); text-transform: uppercase; margin-bottom: 0.5rem;">Last Updated</p>
+                                <p style="font-weight: 700; color: var(--gray-900); display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-edit" style="color: var(--gray-600);"></i>${updatedDate}
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                    openModal('customerDetailsModal');
+                }
+
+                // ═══════════════════════════════════════════════════════════════
+                // SEND EMAIL MODAL
+                // ═══════════════════════════════════════════════════════════════
+                function openSendEmailModal(id) {
+                    const customer = currentPageCustomers.find(c => c.id === id);
+                    if (!customer) {
+                        showToast('Could not find customer details', 'error');
+                        return;
+                    }
+                    const customerName = customer.name || 'Valued Customer';
+                    const customerEmail = customer.email;
+                    if (!customerEmail) {
+                        showToast(`Customer ${customerName} has no email address.`, 'warning');
+                        return;
+                    }
+
+                    document.getElementById('emailToName').value = customerName;
+                    document.getElementById('emailToAddress').value = customerEmail;
+                    document.getElementById('emailSubject').value = `Regarding your account (ID: ${customer.id})`;
+                    document.getElementById('emailBody').value = `Hi ${customerName},\n\nWe're contacting you regarding...\n\n`;
+                    document.getElementById('emailCustomerId').value = customer.id;
+
+                    openModal('sendEmailModal');
+                }
+
+                async function submitSendEmail() {
+                    showToast('Sending email...', 'info');
+
+                    try {
+                        const customerId = document.getElementById('emailCustomerId').value;
+                        const subject = document.getElementById('emailSubject').value;
+                        const body = document.getElementById('emailBody').value;
+
+                        if (!customerId || customerId <= 0) {
+                            throw new Error('Invalid Customer ID. Please close the modal and try again.');
+                        }
+                        if (!subject || !body) {
+                            throw new Error('Subject and Body are required.');
+                        }
+
+                        const requestPayload = {
+                            customerId: parseInt(customerId),
+                            subject: subject,
+                            body: body
+                        };
+
+                        const response = await fetch('/api/customer/send-email', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(requestPayload)
+                        });
+
+                        if (!response.ok) {
+                            const errorMsg = await parseErrorMessage(response);
+                            throw new Error(errorMsg);
+                        }
+
+                        const result = await response.json();
+                        showToast(result.message || 'Email sent successfully!', 'success');
+                        closeModal('sendEmailModal');
+                        document.getElementById('emailForm').reset();
+
+                    } catch (error) {
+                        console.error('Error sending email:', error);
+                        showToast(error.message, 'error');
+                    }
+                }
+
+                // ═══════════════════════════════════════════════════════════════
+                // DELETE CUSTOMER
+                // ═══════════════════════════════════════════════════════════════
+                function openDeleteConfirmModal(id, name) {
+                    if (!name) {
+                        const customer = currentPageCustomers.find(c => c.id === id);
+                        name = customer ? customer.name : 'this customer';
+                    }
+                    customerIdToDelete = id;
+                    document.getElementById('deleteCustomerName').textContent = escapeHtml(name);
+                    openModal('deleteConfirmModal');
+                }
+
+                function confirmDelete() {
+                    if (customerIdToDelete) {
+                        executeDelete(customerIdToDelete);
+                        customerIdToDelete = null;
+                    }
+                    closeModal('deleteConfirmModal');
+                }
+
+                async function executeDelete(id) {
+                    showToast('Deleting customer...', 'info');
+
+                    try {
+                        const response = await fetch(`/api/customer/delete/${id}`, {
+                            method: 'DELETE'
+                        });
+
+                        if (!response.ok) {
+                            const errorMsg = await parseErrorMessage(response);
+                            throw new Error(errorMsg);
+                        }
+
+                        const result = await response.json();
+                        showToast(result.message || 'Customer deleted successfully!', 'success');
+
+                        const index = currentPageCustomers.findIndex(c => c.id === id);
+                        if (index > -1) {
+                            currentPageCustomers.splice(index, 1);
+                        }
+
+                        if (currentPageCustomers.length === 0 && currentPage > 1) {
+                            loadCustomers(currentPage - 1);
+                        } else {
+                            renderCustomers(currentPageCustomers);
+                        }
+
+                        loadCustomerStatistics();
+
+                    } catch (error) {
+                        console.error('Error deleting customer:', error);
+                        showToast(error.message, 'error');
+                    }
+                }
+
+                // ═══════════════════════════════════════════════════════════════
+                // ADD/EDIT CUSTOMER
+                // ═══════════════════════════════════════════════════════════════
+                function openAddCustomerModal() {
+                    document.getElementById('customerForm').reset();
+                    document.getElementById('customerId').value = '';
+                    document.getElementById('customerModalTitle').innerHTML = '<i class="fas fa-user-plus"></i>Add New Customer';
+                    document.getElementById('statusEditBlock').classList.add('hidden');
+                    openModal('customerModal');
+                }
+
+                function openEditCustomerModal(id) {
+                    const customer = currentPageCustomers.find(c => c.id === id);
+                    if (!customer) {
+                        showToast('Could not find customer details', 'error');
+                        return;
+                    }
+
+                    document.getElementById('customerForm').reset();
+                    document.getElementById('customerId').value = customer.id;
+                    document.getElementById('customerName').value = customer.name;
+                    document.getElementById('customerPhone').value = customer.phoneNumber;
+                    document.getElementById('customerEmail').value = customer.email || '';
+                    document.getElementById('customerModalTitle').innerHTML = '<i class="fas fa-user-edit"></i>Edit Customer';
+
+                    const statusBlock = document.getElementById('statusEditBlock');
+                    const statusSelect = document.getElementById('customerStatus');
+                    statusSelect.value = customer.status;
+                    statusBlock.classList.remove('hidden');
+
+                    openModal('customerModal');
+                }
+
+                async function submitCustomerForm() {
+                    const customerId = document.getElementById('customerId').value;
+                    const name = document.getElementById('customerName').value;
+                    const phone = document.getElementById('customerPhone').value;
+                    const email = document.getElementById('customerEmail').value;
+                    const status = document.getElementById('customerStatus').value;
+
+                    if (!name || !phone) {
+                        showToast('Name and Phone Number are required.', 'error');
+                        return;
+                    }
+
+                    const isEditing = !!customerId;
+                    const url = isEditing ? `/api/customer/update` : `/api/customer/create`;
+                    const method = isEditing ? 'PUT' : 'POST';
+
+                    const customerData = {
+                        name: name,
+                        phoneNumber: phone,
+                        email: email
+                    };
+
+                    if (isEditing) {
+                        customerData.id = parseInt(customerId);
+                        customerData.status = parseInt(status);
+                    }
+
+                    showToast(isEditing ? 'Updating customer...' : 'Creating customer...', 'info');
+
+                    try {
+                        const response = await fetch(url, {
+                            method: method,
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(customerData)
+                        });
+
+                        if (!response.ok) {
+                            const errorMsg = await parseErrorMessage(response);
+                            throw new Error(errorMsg);
+                        }
+
+                        const result = await response.json();
+                        showToast(result.message || 'Customer saved successfully!', 'success');
+                        closeModal('customerModal');
+
+                        if (isEditing) {
+                            loadCustomers(currentPage);
+                        } else {
+                            loadCustomers(1);
+                        }
+                        loadCustomerStatistics();
+
+                    } catch (error) {
+                        console.error('Error saving customer:', error);
+                        showToast(error.message, 'error');
+                    }
+                }
+
+                // ═══════════════════════════════════════════════════════════════
+                // IMPORT CUSTOMERS
+                // ═══════════════════════════════════════════════════════════════
+                function openImportModal() {
+                    document.getElementById('importForm').reset();
+                    document.getElementById('importUploadSection').classList.remove('hidden');
+                    document.getElementById('importProgressSection').classList.add('hidden');
+                    document.getElementById('importResultSection').classList.add('hidden');
+                    document.getElementById('importResultSection').innerHTML = '';
+                    document.getElementById('submitImportBtn').disabled = false;
+                    document.getElementById('excelFile').accept = ".xlsx,.xls,.csv";
+                    openModal('importModal');
+                }
+
+                async function submitImportFile() {
+                    const fileInput = document.getElementById('excelFile');
+                    const file = fileInput.files[0];
+
+                    if (!file) {
+                        showToast('Please select a file first.', 'error');
+                        return;
+                    }
+
+                    const allowedExtensions = ['.xlsx', '.xls', '.csv'];
+                    const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+                    if (!allowedExtensions.includes(fileExtension)) {
+                        showToast('Invalid file type. Only .xlsx, .xls, or .csv are allowed.', 'error');
+                        return;
+                    }
+
+                    document.getElementById('importUploadSection').classList.add('hidden');
+                    document.getElementById('importProgressSection').classList.remove('hidden');
+                    document.getElementById('submitImportBtn').disabled = true;
+
+                    let progress = 0;
+                    const progressBar = document.getElementById('importProgressBar');
+                    const progressInterval = setInterval(() => {
+                        progress += 10;
+                        if (progress > 90) progress = 90;
+                        progressBar.style.width = progress + '%';
+                    }, 200);
+
+                    try {
+                        const formData = new FormData();
+                        formData.append('file', file);
+
+                        const response = await fetch('/api/customer/import', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        clearInterval(progressInterval);
+                        progressBar.style.width = '100%';
+
+                        const result = await response.json();
+
+                        if (!response.ok) {
+                            const errorMsg = result.message || (result.errors ? result.errors.join(', ') : `Request failed with status ${response.status}`);
+                            throw new Error(errorMsg);
+                        }
+
+                        document.getElementById('importProgressSection').classList.add('hidden');
+                        document.getElementById('importResultSection').classList.remove('hidden');
+
+                        renderImportResults(result);
+
+                        loadCustomers(1);
+                        loadCustomerStatistics();
+
+                    } catch (error) {
+                        clearInterval(progressInterval);
+                        console.error('Error importing customers:', error);
+                        showToast(error.message, 'error');
+
+                        document.getElementById('importProgressSection').classList.add('hidden');
+                        document.getElementById('importUploadSection').classList.remove('hidden');
+                        document.getElementById('submitImportBtn').disabled = false;
+                    }
+                }
+
+                function renderImportResults(result) {
+                    const resultSection = document.getElementById('importResultSection');
+
+                    let html = '';
+
+                    if (result.successfullyImported > 0) {
+                        html += `
+                            <div class="import-result-card import-result-success">
+                                <p style="font-weight: 700; color: var(--success-600);">
+                                    <i class="fas fa-check-circle"></i>
+                                    Successfully Imported: ${result.successfullyImported} customers
+                                </p>
+                            </div>
+                        `;
+                    }
+
+                    if (result.failedOrDuplicates > 0) {
+                        html += `
+                            <div class="import-result-card import-result-error">
+                                <p style="font-weight: 700; color: var(--danger-600);">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Failed or Duplicates: ${result.failedOrDuplicates} rows
+                                </p>
+                            </div>
+                        `;
+                    }
+
+                    if (result.errorMessages && result.errorMessages.length > 0) {
+                        html += `
+                            <div style="margin-top: 1.5rem;">
+                                <p style="font-size: 0.9rem; font-weight: 700; color: var(--gray-700); margin-bottom: 0.75rem;">Error Details:</p>
+                                <div style="max-height: 200px; overflow-y: auto; padding: 1rem; background: var(--danger-50); border-radius: var(--border-radius-md);">
+                                    ${result.errorMessages.map(err => `
+                                        <div style="padding: 0.5rem 0; font-size: 0.875rem; color: var(--danger-600);">
+                                            <i class="fas fa-times-circle"></i> ${escapeHtml(err)}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    html += `
+                        <div style="margin-top: 1.5rem; padding: 1.25rem; background: var(--gray-50); border-radius: var(--border-radius-lg); border: 2px solid var(--gray-200);">
+                            <p style="font-size: 0// ... (هذا تكملة للجزء المبتور في دالة renderImportResults)
+                            <p style="font-size: 0.95rem; font-weight: 600; color: var(--gray-700);">
+                                <i class="fas fa-info-circle"></i>
+                                Total Rows Processed: ${result.totalRowsProcessed}
+                            </p>
+                        </div>
+                    `;
+
+                    resultSection.innerHTML = html;
+                }
+
+                // ═══════════════════════════════════════════════════════════════
+                // 💡 دالة إظهار الإشعارات (Toast)
+                // ═══════════════════════════════════════════════════════════════
+                function showToast(message, type = 'info') {
+                    const toast = document.createElement('div');
+                    let icon = 'fa-info-circle';
+                    let color = 'var(--primary-600)';
+
+                    switch (type) {
+                        case 'success':
+                            icon = 'fa-check-circle';
+                            color = 'var(--success-600)';
+                            break;
+                        case 'error':
+                            icon = 'fa-exclamation-triangle';
+                            color = 'var(--danger-600)';
+                            break;
+                        case 'warning':
+                            icon = 'fa-exclamation-circle';
+                            color = 'var(--warning-600)';
+                            break;
+                    }
+
+                    toast.style = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        padding: 1.25rem 1.5rem;
+                        background: #ffffff;
+                        border-radius: var(--border-radius-lg);
+                        border: 2px solid ${color};
+                        border-left: 6px solid ${color};
+                        box-shadow: var(--shadow-xl);
+                        color: ${color};
+                        display: flex;
+                        align-items: center;
+                        gap: 1rem;
+                        font-size: 1rem;
+                        font-weight: 700;
+                        z-index: 10000;
+                        transform: translateX(120%);
+                        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+                    `;
+                    toast.innerHTML = `<i class="fas ${icon}"></i> ${escapeHtml(message)}`;
+                    document.body.appendChild(toast);
+
+                    // Animate in
+                    setTimeout(() => {
+                        toast.style.transform = 'translateX(0)';
+                    }, 100);
+
+                    // Animate out
+                    setTimeout(() => {
+                        toast.style.transform = 'translateX(120%)';
+                        // Remove from DOM
+                        setTimeout(() => {
+                            toast.remove();
+                        }, 500);
+                    }, 3500); // إخفاء بعد 3.5 ثانية
+                }
+
+                // ═══════════════════════════════════════════════════════════════
+                // 💡 (اختياري) كود اتصال SignalR
+                // ═══════════════════════════════════════════════════════════════
+                async function startSignalRConnection() {
+                    signalRConnection = new signalR.HubConnectionBuilder()
+                        .withUrl("/customerHub") // (افترضت أن اسم الـ Hub هو customerHub، يرجى تعديله)
+                        .withAutomaticReconnect()
+                        .build();
+
+                    // (اختياري) يمكنك إضافة معالجات للأحداث القادمة من السيرفر
+                    signalRConnection.on("ReceiveStatisticsUpdate", (stats) => {
+                        console.log("SignalR: Statistics updated", stats);
+                        // تحديث واجهة الإحصائيات مباشرة
+                        document.getElementById('totalCount').textContent = stats.totalCount ?? 0;
+                        document.getElementById('bookedCount').textContent = stats.bookedCount ?? 0;
+                        document.getElementById('callingCount').textContent = stats.callingCount ?? 0;
+                        document.getElementById('newCount').textContent = stats.newCount ?? 0;
+                        showToast('Statistics have been updated!', 'info');
+                    });
+
+                    signalRConnection.on("ReceiveCustomerUpdate", (customerId) => {
+                        console.log(`SignalR: Customer ${customerId} updated`);
+                        // إعادة تحميل الصفحة الحالية لرؤية التغييرات
+                        loadCustomers(currentPage);
+                        showToast(`Customer data has been updated (ID: ${customerId}).`, 'info');
+                    });
+
+                    try {
+                        await signalRConnection.start();
+                        console.log("SignalR Connected successfully.");
+                    } catch (err) {
+                        console.error("SignalR Connection Failed: ", err);
+        A           }
+                }
+
+                // ═══════════════════════════════════════════════════════════════
+                // 💡 بدء تشغيل الصفحة وربط الأحداث
+                // ═══════════════════════════════════════════════════════════════
+                document.addEventListener("DOMContentLoaded", () => {
+                    // --- تحميل البيانات الأولية ---
+                    loadCustomers(1);
+                    loadCustomerStatistics();
+                    startSignalRConnection(); // (اختياري) بدء اتصال SignalR
+
+                    // --- ربط أزرار الهيدر ---
+                    document.getElementById('addNewCustomerBtn').addEventListener('click', openAddCustomerModal);
+                    document.getElementById('importCustomersBtn').addEventListener('click', openImportModal);
+                    document.getElementById('refreshCustomersBtn').addEventListener('click', () => {
+                        showToast('Refreshing data...', 'info');
+                        loadCustomers(currentPage);
+                        loadCustomerStatistics();
+                    });
+
+                    // --- ربط فلاتر البحث ---
+                    document.getElementById('searchCustomerInput').addEventListener('keyup', (e) => {
+                        clearTimeout(debounceTimer);
+                        debounceTimer = setTimeout(() => {
+                            loadCustomers(1); // العودة للصفحة الأولى عند البحث
+                        }, 500); // (Debounce 500ms)
+                    });
+
+                    document.getElementById('filterCustomerStatus').addEventListener('change', () => {
+                        loadCustomers(1); // العودة للصفحة الأولى عند الفلترة
+                    });
+                });
+
+    </script>
+}

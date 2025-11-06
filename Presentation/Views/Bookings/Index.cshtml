@@ -1,0 +1,1964 @@
+﻿@{
+    ViewData["Title"] = "Bookings Management";
+}
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    PROFESSIONAL CSS STYLES
+    ═══════════════════════════════════════════════════════════════
+-->
+<style>
+    /* ============================================================
+       CSS VARIABLES - Modern Color Palette
+    ============================================================ */
+    :root {
+        --primary-50: #EEF2FF;
+        --primary-100: #E0E7FF;
+        --primary-200: #C7D2FE;
+        --primary-500: #6366F1;
+        --primary-600: #4F46E5;
+        --primary-700: #4338CA;
+        --primary-800: #3730A3;
+        
+        --success-50: #ECFDF5;
+        --success-100: #D1FAE5;
+        --success-500: #10B981;
+        --success-600: #059669;
+        
+        --warning-50: #FEF3C7;
+        --warning-100: #FDE68A;
+        --warning-500: #F59E0B;
+        --warning-600: #D97706;
+        
+        --danger-50: #FEE2E2;
+        --danger-100: #FECACA;
+        --danger-500: #EF4444;
+        --danger-600: #DC2626;
+        
+        --gray-50: #F9FAFB;
+        --gray-100: #F3F4F6;
+        --gray-200: #E5E7EB;
+        --gray-300: #D1D5DB;
+        --gray-400: #9CA3AF;
+        --gray-500: #6B7280;
+        --gray-600: #4B5563;
+        --gray-700: #374151;
+        --gray-800: #1F2937;
+        --gray-900: #111827;
+        
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        
+        --border-radius-sm: 0.375rem;
+        --border-radius-md: 0.5rem;
+        --border-radius-lg: 0.75rem;
+        --border-radius-xl: 1rem;
+        --border-radius-full: 9999px;
+        
+        --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================================
+       GLOBAL ANIMATIONS
+    ============================================================ */
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @@keyframes slideDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @@keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    @@keyframes shimmer {
+        0% { background-position: -1000px 0; }
+        100% { background-position: 1000px 0; }
+    }
+
+    @@keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    /* ============================================================
+       PAGE HEADER - Enhanced Design
+    ============================================================ */
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: var(--border-radius-xl);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-xl);
+        position: relative;
+        overflow: hidden;
+        animation: slideDown var(--transition-slow);
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        opacity: 0.5;
+    }
+
+    .page-header-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .page-header-icon {
+        width: 4rem;
+        height: 4rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: var(--border-radius-xl);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        transition: transform var(--transition-base);
+    }
+
+    .page-header-icon:hover {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .page-header-icon i {
+        font-size: 2rem;
+        color: #ffffff;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-header-text h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        letter-spacing: -0.025em;
+    }
+
+    .page-header-text p {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.5rem 0 0 0;
+        font-weight: 500;
+    }
+
+    .btn-refresh {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--border-radius-full);
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all var(--transition-base);
+        cursor: pointer;
+        box-shadow: var(--shadow-md);
+    }
+
+    .btn-refresh:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .btn-refresh i {
+        transition: transform var(--transition-base);
+    }
+
+    .btn-refresh:hover i {
+        transform: rotate(180deg);
+    }
+
+    /* ============================================================
+       STATISTICS CARDS - Modern Design
+    ============================================================ */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: #ffffff;
+        border-radius: var(--border-radius-xl);
+        padding: 1.75rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--gray-200);
+        position: relative;
+        overflow: hidden;
+        transition: all var(--transition-base);
+        animation: fadeIn var(--transition-slow);
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        transition: width var(--transition-base);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-xl);
+    }
+
+    .stat-card-primary::before { background: linear-gradient(180deg, var(--primary-500), var(--primary-700)); }
+    .stat-card-success::before { background: linear-gradient(180deg, var(--success-500), var(--success-600)); }
+    .stat-card-warning::before { background: linear-gradient(180deg, var(--warning-500), var(--warning-600)); }
+
+    .stat-card:hover::before {
+        width: 100%;
+        opacity: 0.05;
+    }
+
+    .stat-card-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+    }
+
+    .stat-icon {
+        width: 4.5rem;
+        height: 4.5rem;
+        border-radius: var(--border-radius-xl);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: transform var(--transition-base);
+    }
+
+    .stat-card:hover .stat-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .stat-icon::before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: var(--border-radius-xl);
+        padding: 4px;
+        background: linear-gradient(135deg, currentColor, transparent);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity var(--transition-base);
+    }
+
+    .stat-card:hover .stat-icon::before {
+        opacity: 0.3;
+    }
+
+    .stat-icon-primary {
+        background: linear-gradient(135deg, var(--primary-100), var(--primary-200));
+        color: var(--primary-600);
+    }
+
+    .stat-icon-success {
+        background: linear-gradient(135deg, var(--success-100), var(--success-50));
+        color: var(--success-600);
+    }
+
+    .stat-icon-warning {
+        background: linear-gradient(135deg, var(--warning-100), var(--warning-50));
+        color: var(--warning-600);
+    }
+
+    .stat-icon i {
+        font-size: 2rem;
+    }
+
+    .stat-info {
+        flex: 1;
+        text-align: right;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--gray-600);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--gray-900);
+        line-height: 1;
+        letter-spacing: -0.025em;
+    }
+
+    .stat-description {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        margin-top: 0.5rem;
+        font-weight: 500;
+    }
+
+    /* ============================================================
+       TABLE CONTAINER - Professional Design
+    ============================================================ */
+    .table-container {
+        background: #ffffff;
+        border-radius: var(--border-radius-xl);
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--gray-200);
+        overflow: hidden;
+        animation: scaleIn var(--transition-slow);
+    }
+
+    .table-filters {
+        padding: 1.75rem 2rem;
+        background: linear-gradient(to right, var(--gray-50), #ffffff);
+        border-bottom: 2px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .filters-group {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        min-width: 300px;
+    }
+
+    .search-wrapper {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-400);
+        font-size: 1rem;
+        pointer-events: none;
+        transition: color var(--transition-fast);
+    }
+
+    .search-input {
+        width: 100%;
+        height: 3rem;
+        padding: 0 1rem 0 3rem;
+        border: 2px solid var(--gray-200);
+        border-radius: var(--border-radius-full);
+        font-size: 0.95rem;
+        color: var(--gray-900);
+        background: #ffffff;
+        transition: all var(--transition-base);
+        font-weight: 500;
+    }
+
+    .search-input:focus {
+        border-color: var(--primary-500);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        outline: none;
+    }
+
+    .search-input:focus + .search-icon {
+        color: var(--primary-500);
+    }
+
+    .filter-select {
+        height: 3rem;
+        padding: 0 2.5rem 0 1rem;
+        border: 2px solid var(--gray-200);
+        border-radius: var(--border-radius-full);
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--gray-700);
+        background: #ffffff url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="%234B5563"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>') no-repeat right 0.75rem center;
+        background-size: 1.25rem;
+        appearance: none;
+        cursor: pointer;
+        transition: all var(--transition-base);
+        min-width: 160px;
+    }
+
+    .filter-select:focus {
+        border-color: var(--primary-500);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        outline: none;
+    }
+
+    /* ============================================================
+       TABLE - Modern Design
+    ============================================================ */
+    .table-wrapper {
+        overflow-x: auto;
+        max-height: 800px;
+        position: relative;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .table thead {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: linear-gradient(180deg, var(--gray-50) 0%, #ffffff 100%);
+    }
+
+    .table thead tr {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .table th {
+        padding: 1.25rem 1.5rem;
+        text-align: left;
+        font-size: 0.8rem;
+        font-weight: 800;
+        color: var(--gray-700);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+        border-bottom: 2px solid var(--gray-300);
+        background: var(--gray-50);
+    }
+
+    .table th i {
+        margin-right: 0.5rem;
+        color: var(--primary-600);
+    }
+
+    .table tbody tr {
+        transition: all var(--transition-fast);
+        border-bottom: 1px solid var(--gray-200);
+    }
+
+    .table tbody tr:hover {
+        background: linear-gradient(90deg, var(--primary-50) 0%, transparent 100%);
+        transform: scale(1.01);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .table td {
+        padding: 1.25rem 1.5rem;
+        font-size: 0.95rem;
+        color: var(--gray-700);
+        vertical-align: middle;
+    }
+
+    .data-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem; /* 4px gap between label and value */
+    }
+
+    .data-label {
+        font-size: 0.75rem; /* 12px */
+        font-weight: 700;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        white-space: nowrap;
+    }
+
+    .data-value {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem; /* 10px */
+        font-size: 0.95rem; /* 15px */
+        font-weight: 500;
+        color: var(--gray-900);
+    }
+
+        /* لتوحيد حجم الأيقونات ومكانها */
+        .data-value i.fas {
+            width: 1.1rem; /* 18px */
+            text-align: center;
+            font-size: 0.9rem; /* 14px */
+        }
+
+        /* ألوان الأيقونات */
+        .data-value i.fa-phone,
+        .data-value i.fa-envelope {
+            color: var(--primary-600);
+        }
+
+        .data-value i.fa-calendar {
+            color: var(--success-600); /* لون أيقونة تاريخ الحجز */
+        }
+
+        .data-value i.fa-clock {
+            color: var(--gray-500);
+        }
+
+        .data-value span {
+            /* عشان لو الإيميل طويل ميضربش التصميم */
+            word-break: break-word;
+        }
+
+    /* ============================================================
+       AVATAR
+    ============================================================ */
+    .customer-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .avatar {
+        width: 3rem;
+        height: 3rem;
+        border-radius: var(--border-radius-full);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #ffffff;
+        background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+        box-shadow: var(--shadow-md);
+        position: relative;
+        transition: transform var(--transition-base);
+    }
+
+    .avatar::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: var(--border-radius-full);
+        padding: 2px;
+        background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity var(--transition-base);
+    }
+
+    .table tbody tr:hover .avatar {
+        transform: scale(1.15);
+    }
+
+    .table tbody tr:hover .avatar::before {
+        opacity: 1;
+    }
+
+    .customer-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .customer-name {
+        font-weight: 700;
+        color: var(--gray-900);
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .customer-id {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        font-weight: 600;
+    }
+
+    /* ============================================================
+       BADGES - Enhanced Design
+    ============================================================ */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        border-radius: var(--border-radius-full);
+        white-space: nowrap;
+        letter-spacing: 0.025em;
+        text-transform: uppercase;
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-base);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s;
+    }
+
+    .badge:hover::before {
+        left: 100%;
+    }
+
+    .badge i {
+        font-size: 0.9rem;
+    }
+
+    .badge-booked {
+        background: linear-gradient(135deg, var(--success-100), var(--success-50));
+        color: var(--success-600);
+        border: 2px solid var(--success-600);
+    }
+
+    .badge-contacted {
+        background: linear-gradient(135deg, var(--primary-100), var(--primary-50));
+        color: var(--primary-600);
+        border: 2px solid var(--primary-600);
+    }
+
+    .badge-failed {
+        background: linear-gradient(135deg, var(--danger-100), var(--danger-50));
+        color: var(--danger-600);
+        border: 2px solid var(--danger-600);
+    }
+
+    /* ============================================================
+       ACTION BUTTONS - Modern Design
+    ============================================================ */
+    .actions-group {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .action-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: var(--border-radius-lg);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: #ffffff;
+        border: none;
+        cursor: pointer;
+        transition: all var(--transition-base);
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+    }
+
+    .action-btn::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
+        opacity: 0;
+        transition: opacity var(--transition-base);
+    }
+
+    .action-btn:hover::before {
+        opacity: 1;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-4px) scale(1.1);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .action-btn:active {
+        transform: translateY(-2px) scale(1.05);
+    }
+
+    .action-view {
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+    }
+
+    .action-view:hover {
+        background: linear-gradient(135deg, var(--primary-700), var(--primary-800));
+    }
+
+    .action-email {
+        background: linear-gradient(135deg, #3B82F6, #2563EB);
+    }
+
+    .action-email:hover {
+        background: linear-gradient(135deg, #2563EB, #1D4ED8);
+    }
+
+    .action-edit {
+        background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+    }
+
+    .action-edit:hover {
+        background: linear-gradient(135deg, var(--warning-600), #B45309);
+    }
+
+    /* ============================================================
+       PAGINATION - Enhanced Design
+    ============================================================ */
+    .pagination-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.75rem 2rem;
+        background: linear-gradient(to right, #ffffff, var(--gray-50));
+        border-top: 2px solid var(--gray-200);
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .pagination-info {
+        font-size: 0.95rem;
+        color: var(--gray-600);
+        font-weight: 600;
+    }
+
+    .pagination-info span {
+        color: var(--primary-600);
+        font-weight: 800;
+    }
+
+    .pagination-controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .pagination-btn {
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: var(--border-radius-lg);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        color: #ffffff;
+        border: none;
+        cursor: pointer;
+        transition: all var(--transition-base);
+        box-shadow: var(--shadow-md);
+        font-weight: 700;
+    }
+
+    .pagination-btn:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+        background: linear-gradient(135deg, var(--primary-700), var(--primary-800));
+    }
+
+    .pagination-btn:disabled {
+        background: var(--gray-300);
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    .pagination-page {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--gray-700);
+        padding: 0 1rem;
+    }
+
+    /* ============================================================
+       MODALS - Professional Design
+    ============================================================ */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 1.5rem;
+        animation: fadeIn var(--transition-base);
+    }
+
+    .modal-overlay.hidden {
+        display: none;
+    }
+
+    .modal-content {
+        background: #ffffff;
+        border-radius: var(--border-radius-xl);
+        box-shadow: var(--shadow-xl);
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        animation: scaleIn var(--transition-slow);
+        border: 1px solid var(--gray-200);
+    }
+
+    .modal-header {
+        padding: 2rem;
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .modal-header h3 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .modal-close {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: var(--border-radius-full);
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all var(--transition-base);
+    }
+
+    .modal-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+    }
+
+    .modal-body {
+        padding: 2rem;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .modal-footer {
+        padding: 1.5rem 2rem;
+        background: var(--gray-50);
+        border-top: 2px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 1rem;
+    }
+
+    /* ============================================================
+       FORM ELEMENTS
+    ============================================================ */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--gray-700);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid var(--gray-200);
+        border-radius: var(--border-radius-md);
+        font-size: 1rem;
+        color: var(--gray-900);
+        background: #ffffff;
+        transition: all var(--transition-base);
+        font-weight: 500;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+        border-color: var(--primary-500);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        outline: none;
+    }
+
+    .form-input:disabled,
+    .form-textarea:disabled,
+    .form-select:disabled {
+        background: var(--gray-100);
+        cursor: not-allowed;
+    }
+
+    .form-textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn {
+        padding: 0.875rem 1.75rem;
+        border-radius: var(--border-radius-full);
+        font-size: 1rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all var(--transition-base);
+        border: none;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        box-shadow: var(--shadow-md);
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .btn:active {
+        transform: translateY(0);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        color: #ffffff;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, var(--primary-700), var(--primary-800));
+    }
+
+    .btn-secondary {
+        background: var(--gray-200);
+        color: var(--gray-700);
+    }
+
+    .btn-secondary:hover {
+        background: var(--gray-300);
+    }
+
+    /* ============================================================
+       LOADING STATE
+    ============================================================ */
+    .loading-container {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .spinner {
+        display: inline-block;
+        width: 4rem;
+        height: 4rem;
+        border: 5px solid var(--primary-200);
+        border-top-color: var(--primary-600);
+        border-radius: var(--border-radius-full);
+        animation: spin 0.8s linear infinite;
+    }
+
+    @@keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+        color: var(--gray-600);
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+    }
+
+    /* ============================================================
+       EMPTY STATE
+    ============================================================ */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .empty-icon {
+        font-size: 5rem;
+        color: var(--gray-300);
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-text {
+        font-size: 1.25rem;
+        color: var(--gray-500);
+        font-weight: 600;
+    }
+
+    /* ============================================================
+       DETAILS SECTION - Enhanced Design
+    ============================================================ */
+    .details-hero {
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        padding: 2rem;
+        border-radius: var(--border-radius-lg);
+        margin-bottom: 2rem;
+        color: #ffffff;
+    }
+
+    .details-hero-content {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .details-avatar {
+        width: 5rem;
+        height: 5rem;
+        border-radius: var(--border-radius-full);
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 3px solid rgba(255, 255, 255, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: 800;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .details-hero-info h3 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0 0 0.75rem 0;
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.25rem;
+    }
+
+    .detail-item {
+        background: linear-gradient(135deg, var(--gray-50), #ffffff);
+        padding: 1.5rem;
+        border-radius: var(--border-radius-lg);
+        border: 2px solid var(--gray-200);
+        transition: all var(--transition-base);
+    }
+
+    .detail-item:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-300);
+    }
+
+    .detail-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--gray-600);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+    }
+
+    .detail-value {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .detail-value i {
+        font-size: 1.1rem;
+    }
+
+    .detail-notes {
+        background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+        padding: 1.5rem;
+        border-radius: var(--border-radius-lg);
+        border-left: 4px solid #3B82F6;
+        margin-top: 1.5rem;
+    }
+
+    .detail-notes-label {
+        font-size: 0.85rem;
+        font-weight: 800;
+        color: #1E40AF;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.75rem;
+    }
+
+    .detail-notes-text {
+        color: #1E3A8A;
+        font-weight: 600;
+        line-height: 1.6;
+    }
+
+    /* ============================================================
+       RESPONSIVE DESIGN
+    ============================================================ */
+    @@media (max-width: 768px) {
+        .page-header {
+            padding: 1.5rem;
+        }
+
+        .page-header-text h1 {
+            font-size: 1.5rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .table-filters {
+            padding: 1.5rem;
+        }
+
+        .filters-group {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .search-wrapper {
+            max-width: 100%;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .pagination-container {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .modal-content {
+            margin: 1rem;
+        }
+    }
+</style>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    PAGE HEADER
+    ═══════��═══════════════════════════════════════════════════════
+-->
+<div class="page-header">
+    <div class="page-header-content">
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <div class="page-header-icon">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="page-header-text">
+                <h1>Bookings Management</h1>
+                <p>Track and manage all customer bookings</p>
+            </div>
+        </div>
+        <button id="refreshBookingsBtn" class="btn-refresh">
+            <i class="fas fa-sync-alt"></i>
+            <span>Refresh</span>
+        </button>
+    </div>
+</div>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    STATISTICS CARDS
+    ═══════════════════════════════════════════════════════════════
+-->
+<div class="stats-grid">
+    <!-- Total Bookings -->
+    <div class="stat-card stat-card-primary">
+        <div class="stat-card-content">
+            <div class="stat-icon stat-icon-primary">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-label">Total Bookings</div>
+                <div class="stat-value" id="totalBookings">0</div>
+                <div class="stat-description">All time bookings</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- This Week -->
+    <div class="stat-card stat-card-success">
+        <div class="stat-card-content">
+            <div class="stat-icon stat-icon-success">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-label">This Week</div>
+                <div class="stat-value" id="weekBookings">0</div>
+                <div class="stat-description">Last 7 days</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Today -->
+    <div class="stat-card stat-card-warning">
+        <div class="stat-card-content">
+            <div class="stat-icon stat-icon-warning">
+                <i class="fas fa-calendar-day"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-label">Today</div>
+                <div class="stat-value" id="todayBookings">0</div>
+                <div class="stat-description">New bookings</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    TABLE CONTAINER
+    ═══════════════════════════════════════════════════════════════
+-->
+<div class="table-container">
+    <!-- Filters Bar -->
+    <div class="table-filters">
+        <div class="filters-group">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text"
+                       id="searchBookingInput"
+                       placeholder="Search by name or phone..."
+                       class="search-input">
+            </div>
+
+            <select id="filterStatus" class="filter-select">
+                <option value="">All Status</option>
+                <option value="0">Booked</option>
+                <option value="1">Confirmed</option>
+                <option value="2">Cancelled</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-user"></i>Customer</th>
+                    <th><i class="fas fa-phone"></i>Phone Number</th>
+                    <th><i class="fas fa-envelope"></i>Email</th>
+                    <th><i class="fas fa-info-circle"></i>Status</th>
+                    <th><i class="fas fa-calendar"></i>Booking Date</th>
+                    <th><i class="fas fa-clock"></i>Created At</th>
+                    <th style="text-align: center;"><i class="fas fa-cog"></i>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="bookingsTableBody">
+                <!-- Loading State -->
+                <tr>
+                    <td colspan="7">
+                        <div class="loading-container">
+                            <div class="spinner"></div>
+                            <p class="loading-text">Loading bookings...</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div id="paginationControls" class="pagination-container">
+        <!-- Pagination will be rendered here -->
+    </div>
+</div>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    MODALS
+    ═══════════════════════════════════════════════════════════════
+-->
+
+<!-- Booking Details Modal -->
+<div id="bookingDetailsModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-info-circle"></i>Booking Details</h3>
+            <button onclick="closeModal('bookingDetailsModal')" class="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div id="bookingDetailsContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeModal('bookingDetailsModal')" class="btn btn-secondary">
+                <i class="fas fa-times"></i>Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Send Email Modal -->
+<div id="sendEmailModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-paper-plane"></i>Send Email</h3>
+            <button onclick="closeModal('sendEmailModal')" class="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="emailForm">
+                <input type="hidden" id="emailContextId" />
+                
+                <div class="form-group">
+                    <label for="emailToName" class="form-label">To (Name):</label>
+                    <input type="text" id="emailToName" class="form-input" readonly />
+                </div>
+                
+                <div class="form-group">
+                    <label for="emailToAddress" class="form-label">To (Email):</label>
+                    <input type="email" id="emailToAddress" class="form-input" readonly />
+                </div>
+                
+                <div class="form-group">
+                    <label for="emailSubject" class="form-label">Subject:</label>
+                    <input type="text" id="emailSubject" placeholder="Enter email subject" class="form-input" required />
+                </div>
+                
+                <div class="form-group">
+                    <label for="emailBody" class="form-label">Body:</label>
+                    <textarea id="emailBody" placeholder="Write your message..." class="form-textarea" required></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" onclick="closeModal('sendEmailModal')" class="btn btn-secondary">
+                <i class="fas fa-times"></i>Cancel
+            </button>
+            <button type="button" onclick="submitSendEmail()" class="btn btn-primary">
+                <i class="fas fa-paper-plane"></i>Send Email
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Status Modal -->
+<div id="editStatusModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3><i class="fas fa-edit"></i>Update Status</h3>
+            <button onclick="closeModal('editStatusModal')" class="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="editStatusForm">
+                <input type="hidden" id="editStatusBookingId" />
+                
+                <div class="form-group">
+                    <p style="color: var(--gray-600); font-weight: 600; margin-bottom: 1.5rem;">
+                        Updating status for booking ID: <span id="editStatusBookingIdLabel" style="color: var(--primary-600); font-weight: 800;"></span>
+                    </p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editBookingStatus" class="form-label">New Status:</label>
+                    <select id="editBookingStatus" class="form-select">
+                        <option value="0">Booked</option>
+                        <option value="1">Confirmed</option>
+                        <option value="2">Cancelled</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" onclick="closeModal('editStatusModal')" class="btn btn-secondary">
+                <i class="fas fa-times"></i>Cancel
+            </button>
+            <button type="button" onclick="submitEditStatus()" class="btn btn-primary">
+                <i class="fas fa-save"></i>Save Changes
+            </button>
+        </div>
+    </div>
+</div>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    JAVASCRIPT
+    ═══════════════════════════════════════════════════════════════
+-->
+@section Scripts {
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // GLOBAL VARIABLES
+        // ═══════════════════════════════════════════════════════════════
+        const statusMap = {
+            0: { name: "Booked", class: "badge-booked", icon: "fa-check" },
+            1: { name: "Confirmed", class: "badge-contacted", icon: "fa-calendar-check" },
+            2: { name: "Cancelled", class: "badge-failed", icon: "fa-times-circle" }
+        };
+
+        let currentPageBookings = [];
+        let currentPage = 1;
+        let debounceTimer;
+
+        // ═══════════════════════════════════════════════════════════════
+        // MODAL FUNCTIONS
+        // ═══════════════════════════════════════════════════════════════
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // HELPER FUNCTIONS
+        // ═══════════════════════════════════════════════════════════════
+        function getInitials(name) {
+            if (!name) return '??';
+            const parts = name.trim().split(' ').filter(Boolean);
+            if (parts.length >= 2) {
+                return (parts[0][0] + (parts[parts.length - 1][0] ?? '')).toUpperCase();
+            } else if (parts.length === 1 && parts[0].length > 0) {
+                return parts[0].substring(0, 2).toUpperCase();
+            }
+            return '??';
+        }
+
+        function escapeHtml(text) {
+            if (typeof text !== 'string') return '';
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>\"']/g, m => map[m]);
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // LOAD BOOKINGS (SERVER-SIDE PAGINATION)
+        // ═══════════════════════════════════════════════════════════════
+        async function loadBookings(pageNumber = 1) {
+            currentPage = pageNumber;
+            const searchTerm = document.getElementById('searchBookingInput').value;
+            const status = document.getElementById('filterStatus').value;
+
+            document.getElementById('bookingsTableBody').innerHTML = `
+                <tr>
+                    <td colspan="7">
+                        <div class="loading-container">
+                            <div class="spinner"></div>
+                            <p class="loading-text">Loading bookings...</p>
+                        </div>
+                    </td>
+                </tr>`;
+
+            document.getElementById('paginationControls').innerHTML = '';
+
+            const params = new URLSearchParams({
+                PageNumber: currentPage,
+                PageSize: 25,
+                SearchTerm: searchTerm,
+                Status: status
+            });
+
+            try {
+                const response = await fetch(`/api/booking/paginated?${params.toString()}`);
+
+                if (response.status === 404) {
+                    currentPageBookings = [];
+                    renderBookings([]);
+                    renderPagination(null);
+                    return;
+                }
+
+                if (!response.ok) {
+                    let errorMsg = 'Failed to fetch bookings';
+                    try {
+                        const errorResult = await response.json();
+                        if (errorResult && errorResult.message) errorMsg = errorResult.message;
+                    } catch (e) { /* ignore */ }
+                    throw new Error(errorMsg);
+                }
+
+                const pagedData = await response.json();
+                currentPageBookings = pagedData.items;
+                renderBookings(pagedData.items);
+                renderPagination(pagedData);
+
+            } catch (error) {
+                console.error('Error loading bookings:', error);
+                if (typeof showToast === 'function') {
+                    showToast(error.message, 'error');
+                } else {
+                    alert(error.message);
+                }
+                document.getElementById('bookingsTableBody').innerHTML = `
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-circle empty-icon" style="color: var(--danger-500);"></i>
+                            <p class="empty-text" style="color: var(--danger-600);">${error.message}</p>
+                        </div>
+                    </td>
+                </tr>`;
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // LOAD STATISTICS
+        // ═══════════════════════════════════════════════════════════════
+        async function loadStatistics() {
+            try {
+                const response = await fetch('/api/booking/statistics');
+                if (!response.ok) throw new Error('Failed to fetch stats');
+
+                const stats = await response.json();
+
+                document.getElementById('totalBookings').textContent = stats.totalCount || 0;
+                document.getElementById('weekBookings').textContent = stats.weekCount || 0;
+                document.getElementById('todayBookings').textContent = stats.todayCount || 0;
+
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+                if (typeof showToast === 'function') showToast('Failed to load statistics', 'warning');
+                document.getElementById('totalBookings').textContent = 'N/A';
+                document.getElementById('weekBookings').textContent = 'N/A';
+                document.getElementById('todayBookings').textContent = 'N/A';
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // RENDER PAGINATION
+        // ═══════════════════════════════════════════════════════════════
+        function renderPagination(pagedData) {
+            const controlsContainer = document.getElementById('paginationControls');
+
+            if (!pagedData || pagedData.totalPages <= 1) {
+                controlsContainer.innerHTML = '';
+                return;
+            }
+
+            const { currentPage, totalPages, totalCount, pageSize, items } = pagedData;
+            const startItem = (currentPage - 1) * pageSize + 1;
+            const endItem = startItem + items.length - 1;
+
+            controlsContainer.innerHTML = `
+                <div class="pagination-info">
+                    Showing <span>${startItem}</span> to <span>${endItem}</span> of <span>${totalCount}</span> results
+                </div>
+                <div class="pagination-controls">
+                    <button onclick="loadBookings(${currentPage - 1})" class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span class="pagination-page">Page ${currentPage} of ${totalPages}</span>
+                    <button onclick="loadBookings(${currentPage + 1})" class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // RENDER BOOKINGS TABLE
+        // ═══════════════════════════════════════════════════════════════
+        // ═══════════════════════════════════════════════════════════════
+         // RENDER BOOKINGS TABLE (MODIFIED FOR BETTER UI)
+         // ═══════════════════════════════════════════════════════════════
+         function renderBookings(data) {
+             const tbody = document.getElementById('bookingsTableBody');
+
+             if (data.length === 0) {
+                 tbody.innerHTML = `
+                 <tr>
+                     <td colspan="7">
+                         <div class="empty-state">
+                             <i class="fas fa-calendar-times empty-icon"></i>
+                             <p class="empty-text">No bookings found matching your criteria</p>
+                         </div>
+                     </td>
+                 </tr>`;
+                 return;
+             }
+
+             tbody.innerHTML = data.map(booking => {
+                 const status = statusMap[booking.status] || { name: "Unknown", class: "badge-failed", icon: "fa-question" };
+                 const createdDate = new Date(booking.createdAt).toLocaleDateString();
+                 const bookingDate = booking.appointmentTime ? new Date(booking.appointmentTime).toLocaleDateString() : 'N/A';
+
+                 const customerName = booking.prospectName || 'Unknown';
+                 const customerPhone = booking.prospectPhone || 'N/A';
+                 const customerEmail = booking.prospectEmail || 'N/A';
+                 const bookingId = booking.bookingId;
+                 const initials = getInitials(customerName);
+
+                 // [MODIFIED] The row structure is now using the new .data-cell styles
+                 return `
+                 <tr data-booking-id="${bookingId}">
+
+                     <td>
+                         <div class="customer-info">
+                             <div class="avatar">${escapeHtml(initials)}</div>
+                             <div class="customer-details">
+                                 <div class="customer-name">${escapeHtml(customerName)}</div>
+                                 <div class="customer-id">ID: #${bookingId}</div>
+                             </div>
+                         </div>
+                     </td>
+
+                     <td>
+                         <div class="data-cell">
+                             <div class="data-label">Phone</div>
+                             <div class="data-value">
+                                 <i class="fas fa-phone"></i>
+                                 <span>${escapeHtml(customerPhone)}</span>
+                             </div>
+                         </div>
+                     </td>
+
+                     <td>
+                         <div class="data-cell">
+                             <div class="data-label">Email</div>
+                             <div class="data-value">
+                                 <i class="fas fa-envelope"></i>
+                                 <span>${escapeHtml(customerEmail)}</span>
+                             </div>
+                         </div>
+                     </td>
+
+                     <td>
+                         <div class="data-cell">
+                             <div class="data-label">Status</div>
+                             <div>
+                                 <span class="badge ${status.class}">
+                                     <i class="fas ${status.icon}"></i>${status.name}
+                                 </span>
+                             </div>
+                         </div>
+                     </td>
+
+                     <td>
+                         <div class="data-cell">
+                             <div class="data-label">Booking Date</div>
+                             <div class="data-value">
+                                 <i class="fas fa-calendar"></i>
+                                 <span>${bookingDate}</span>
+                             </div>
+                         </div>
+                     </td>
+
+                     <td>
+                         <div class="data-cell">
+                             <div class="data-label">Created At</div>
+                             <div class="data-value">
+                                 <i class="fas fa-clock"></i>
+                                 <span>${createdDate}</span>
+                             </div>
+                         </div>
+                     </td>
+
+                     <td>
+                         <div class="actions-group">
+                             <button onclick="viewBookingDetails(${bookingId})" class="action-btn action-view" title="View Details">
+                                 <i class="fas fa-eye"></i>
+                             </button>
+                             <button onclick="openSendEmailModal(${bookingId})" class="action-btn action-email" title="Send Email">
+                                 <i class="fas fa-paper-plane"></i>
+                             </button>
+                             <button onclick="openEditStatusModal(${bookingId})" class="action-btn action-edit" title="Edit Status">
+                                 <i class="fas fa-edit"></i>
+                             </button>
+                         </div>
+                     </td>
+                 </tr>`;
+             }).join('');
+         }
+
+        // ═══════════════════════════════════════════════════════════════
+        // VIEW BOOKING DETAILS
+        // ═══════════════════════════════════════════════════════════════
+        function viewBookingDetails(id) {
+            const booking = currentPageBookings.find(b => b.bookingId === id);
+            if (!booking) {
+                if (typeof showToast === 'function') showToast('Could not find booking details.', 'error');
+                return;
+            }
+
+            const status = statusMap[booking.status] || { name: "Unknown", class: "badge-failed", icon: "fa-question" };
+            const createdDate = new Date(booking.createdAt).toLocaleString();
+            const bookingDate = booking.appointmentTime ? new Date(booking.appointmentTime).toLocaleString() : 'Not set';
+
+            document.getElementById('bookingDetailsContent').innerHTML = `
+                <div class="details-hero">
+                    <div class="details-hero-content">
+                        <div class="details-avatar">
+                            ${escapeHtml(getInitials(booking.prospectName))}
+                        </div>
+                        <div class="details-hero-info">
+                            <h3>${escapeHtml(booking.prospectName)}</h3>
+                            <span class="badge ${status.class}">
+                                <i class="fas ${status.icon}"></i>${status.name}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Phone Number</div>
+                        <div class="detail-value">
+                            <i class="fas fa-phone" style="color: var(--primary-600);"></i>
+                            ${escapeHtml(booking.prospectPhone) || 'N/A'}
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Email Address</div>
+                        <div class="detail-value">
+                            <i class="fas fa-envelope" style="color: var(--primary-600);"></i>
+                            ${escapeHtml(booking.prospectEmail) || 'N/A'}
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Booking Date</div>
+                        <div class="detail-value">
+                            <i class="fas fa-calendar" style="color: var(--success-600);"></i>
+                            ${bookingDate}
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Created At</div>
+                        <div class="detail-value">
+                            <i class="fas fa-clock" style="color: #3B82F6;"></i>
+                            ${createdDate}
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Booking ID</div>
+                        <div class="detail-value">
+                            <i class="fas fa-hashtag" style="color: #8B5CF6;"></i>
+                            ${booking.bookingId}
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Customer ID</div>
+                        <div class="detail-value">
+                            <i class="fas fa-user-check" style="color: var(--gray-600);"></i>
+                            ${booking.customerId || 'N/A'}
+                        </div>
+                    </div>
+                </div>
+                
+                ${booking.notes ? `
+                <div class="detail-notes">
+                    <div class="detail-notes-label">Notes:</div>
+                    <div class="detail-notes-text">${escapeHtml(booking.notes)}</div>
+                </div>` : ''}
+            `;
+            
+            openModal('bookingDetailsModal');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // OPEN SEND EMAIL MODAL
+        // ═══════════════════════════════════════════════════════════════
+        function openSendEmailModal(bookingId) {
+            const booking = currentPageBookings.find(b => b.bookingId === bookingId);
+            if (!booking) {
+                if (typeof showToast === 'function') showToast('Could not find booking details', 'error');
+                return;
+            }
+
+            const customerName = booking.prospectName || 'Valued Customer';
+            const customerEmail = booking.prospectEmail;
+            const customerId = booking.customerId;
+
+            if (!customerId) {
+                if (typeof showToast === 'function') showToast('This booking is not linked to a customer.', 'warning');
+                return;
+            }
+            if (!customerEmail) {
+                if (typeof showToast === 'function') showToast(`Customer ${customerName} has no email address.`, 'warning');
+                return;
+            }
+
+            document.getElementById('emailContextId').value = customerId;
+            document.getElementById('emailToName').value = customerName;
+            document.getElementById('emailToAddress').value = customerEmail;
+            document.getElementById('emailSubject').value = `Regarding your booking (ID: ${booking.bookingId})`;
+            document.getElementById('emailBody').value = `Hi ${customerName},\n\nWe're contacting you regarding your booking...\n\n`;
+
+            openModal('sendEmailModal');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // SUBMIT SEND EMAIL
+        // ═══════════════════════════════════════════════════════════════
+        async function submitSendEmail() {
+            const customerId = document.getElementById('emailContextId').value;
+            const subject = document.getElementById('emailSubject').value;
+            const body = document.getElementById('emailBody').value;
+
+            if (!subject || !body) {
+                if (typeof showToast === 'function') showToast('Subject and body are required.', 'error');
+                return;
+            }
+
+            if (typeof showToast === 'function') showToast('Sending email...', 'info');
+
+            try {
+                const requestData = {
+                    customerId: parseInt(customerId),
+                    subject: subject,
+                    body: body
+                };
+
+                const response = await fetch('/api/customer/send-email', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestData)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || 'Failed to send email');
+                }
+
+                if (typeof showToast === 'function') showToast(result.message || 'Email sent successfully!', 'success');
+                closeModal('sendEmailModal');
+                document.getElementById('emailForm').reset();
+
+            } catch (error) {
+                console.error('Error sending email:', error);
+                if (typeof showToast === 'function') showToast(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // OPEN EDIT STATUS MODAL
+        // ═══════════════════════════════════════════════════════════════
+        function openEditStatusModal(id) {
+            const booking = currentPageBookings.find(b => b.bookingId === id);
+            if (!booking) {
+                if (typeof showToast === 'function') showToast('Could not find booking details', 'error');
+                return;
+            }
+            
+            document.getElementById('editStatusBookingId').value = booking.bookingId;
+            document.getElementById('editStatusBookingIdLabel').textContent = booking.bookingId;
+            document.getElementById('editBookingStatus').value = booking.status;
+            
+            openModal('editStatusModal');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // SUBMIT EDIT STATUS
+        // ═══════════════════════════════════════════════════════════════
+        async function submitEditStatus() {
+            const bookingId = document.getElementById('editStatusBookingId').value;
+            const newStatus = document.getElementById('editBookingStatus').value;
+
+            if (typeof showToast === 'function') showToast('Updating status...', 'info');
+
+            try {
+                const response = await fetch(`/api/booking/update-status/${bookingId}?status=${newStatus}`, {
+                    method: 'PUT',
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || 'Failed to update status');
+                }
+
+                if (typeof showToast === 'function') showToast('Status updated successfully!', 'success');
+                closeModal('editStatusModal');
+
+                loadBookings(currentPage);
+                loadStatistics();
+
+            } catch (error) {
+                console.error('Error updating status:', error);
+                if (typeof showToast === 'function') showToast(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // EVENT LISTENERS
+        // ═══════════════════════════════════════════════════════════════
+        document.getElementById('searchBookingInput').addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                loadBookings(1);
+            }, 400);
+        });
+
+        document.getElementById('filterStatus').addEventListener('change', () => {
+            loadBookings(1);
+        });
+
+        document.getElementById('refreshBookingsBtn').addEventListener('click', () => {
+            loadBookings(currentPage);
+            loadStatistics();
+        });
+
+        // ═══════════════════════════════════════════════════════════════
+        // INITIALIZE ON PAGE LOAD
+        // ═══════════════════════════════════════════════════════════════
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fallback for showToast if not defined
+            if (typeof showToast === 'undefined') {
+                console.warn("showToast function is not defined. Using fallback.");
+                window.showToast = function(message, type) {
+                    alert(`(${type}): ${message}`);
+                }
+            }
+
+            loadBookings(1);
+            loadStatistics();
+        });
+    </script>
+}

@@ -1,0 +1,1730 @@
+﻿@{
+    ViewData["Title"] = "User Management";
+}
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    [NEW] MASTER CSS STYLES (من ملف Customers/Bookings)
+    ═══════════════════════════════════════════════════════════════
+-->
+<style>
+    /* ============================================================
+            CSS VARIABLES
+        ============================================================ */
+    :root {
+        --primary-50: #EEF2FF;
+        --primary-100: #E0E7FF;
+        --primary-200: #C7D2FE;
+        --primary-500: #6366F1;
+        --primary-600: #4F46E5;
+        --primary-700: #4338CA;
+        --primary-800: #3730A3;
+        --success-50: #ECFDF5;
+        --success-100: #D1FAE5;
+        --success-500: #10B981;
+        --success-600: #059669;
+        --warning-50: #FEF3C7;
+        --warning-100: #FDE68A;
+        --warning-500: #F59E0B;
+        --warning-600: #D97706;
+        --danger-50: #FEE2E2;
+        --danger-100: #FECACA;
+        --danger-500: #EF4444;
+        --danger-600: #DC2626;
+        --gray-50: #F9FAFB;
+        --gray-100: #F3F4F6;
+        --gray-200: #E5E7EB;
+        --gray-300: #D1D5DB;
+        --gray-400: #9CA3AF;
+        --gray-500: #6B7280;
+        --gray-600: #4B5563;
+        --gray-700: #374151;
+        --gray-800: #1F2937;
+        --gray-900: #111827;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        --border-radius-md: 0.5rem;
+        --border-radius-lg: 0.75rem;
+        --border-radius-xl: 1rem;
+        --border-radius-full: 9999px;
+        --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================================
+            ANIMATIONS
+        ============================================================ */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* ============================================================
+            PAGE HEADER
+        ============================================================ */
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: var(--border-radius-xl);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-xl);
+        position: relative;
+        overflow: hidden;
+        animation: slideDown var(--transition-base);
+    }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.5;
+        }
+
+    .page-header-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .page-header-icon {
+        width: 4rem;
+        height: 4rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: var(--border-radius-xl);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        transition: transform var(--transition-base);
+    }
+
+        .page-header-icon:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .page-header-icon i {
+            font-size: 2rem;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+    .page-header-text h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-header-text p {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.5rem 0 0 0;
+        font-weight: 500;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    /* ============================================================
+            BUTTONS (Main + Header Buttons)
+        ============================================================ */
+    .btn {
+        padding: 0.875rem 1.75rem;
+        border-radius: var(--border-radius-full);
+        font-size: 1rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center; /* Added for spinner */
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all var(--transition-base);
+        border: none;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        box-shadow: var(--shadow-md);
+    }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        color: #ffffff;
+    }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--primary-700), var(--primary-800));
+        }
+
+    .btn-secondary {
+        /* This style is for header buttons */
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+    }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+    .btn-success {
+        background: linear-gradient(135deg, var(--success-500), var(--success-600));
+        color: #ffffff;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, var(--danger-500), var(--danger-600));
+        color: #ffffff;
+    }
+
+    /* ============================================================
+            STATISTICS CARDS
+        ============================================================ */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: #ffffff;
+        border-radius: var(--border-radius-xl);
+        padding: 1.75rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--gray-200);
+        position: relative;
+        overflow: hidden;
+        transition: all var(--transition-base);
+        animation: fadeIn var(--transition-base);
+    }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            transition: width var(--transition-base);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+    .stat-card-primary::before {
+        background: linear-gradient(180deg, var(--primary-500), var(--primary-700));
+    }
+
+    .stat-card-success::before {
+        background: linear-gradient(180deg, var(--success-500), var(--success-600));
+    }
+
+    /* Added for User Management */
+    .stat-card-warning::before {
+        background: linear-gradient(180deg, #a855f7, #9333ea); /* Purple gradient */
+    }
+
+    .stat-card:hover::before {
+        width: 100%;
+        opacity: 0.05;
+    }
+
+    .stat-card-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+    }
+
+    .stat-icon {
+        width: 4.5rem;
+        height: 4.5rem;
+        border-radius: var(--border-radius-xl);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform var(--transition-base);
+    }
+
+    .stat-card:hover .stat-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .stat-icon-primary {
+        background: linear-gradient(135deg, var(--primary-100), var(--primary-200));
+        color: var(--primary-600);
+    }
+
+    .stat-icon-success {
+        background: linear-gradient(135deg, var(--success-100), var(--success-50));
+        color: var(--success-600);
+    }
+
+    /* Added for User Management */
+    .stat-icon-warning {
+        background: linear-gradient(135deg, #F3E8FF, #E9D5FF); /* Purple light */
+        color: #7C3AED; /* Purple dark */
+    }
+
+    .stat-icon i {
+        font-size: 2rem;
+    }
+
+    .stat-info {
+        flex: 1;
+        text-align: right;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--gray-600);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--gray-900);
+        line-height: 1;
+    }
+
+    /* ============================================================
+            TABLE CONTAINER
+        ============================================================ */
+    .table-container {
+        background: #ffffff;
+        border-radius: var(--border-radius-xl);
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--gray-200);
+        overflow: hidden;
+        animation: fadeIn var(--transition-base);
+    }
+
+    .table-filters {
+        padding: 1.75rem 2rem;
+        background: linear-gradient(to right, var(--gray-50), #ffffff);
+        border-bottom: 2px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .filters-group {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        min-width: 300px;
+    }
+
+    .search-wrapper {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-400);
+        font-size: 1rem;
+        pointer-events: none;
+        transition: color var(--transition-base);
+    }
+
+    .filter-input {
+        width: 100%;
+        height: 3rem;
+        padding: 0 1rem 0 3rem;
+        border: 2px solid var(--gray-200);
+        border-radius: var(--border-radius-full);
+        font-size: 0.95rem;
+        color: var(--gray-900);
+        background: #ffffff;
+        transition: all var(--transition-base);
+        font-weight: 500;
+    }
+
+        .filter-input:focus {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+            .filter-input:focus + .search-icon {
+                color: var(--primary-500);
+            }
+
+    .filter-select {
+        height: 3rem;
+        padding: 0 2.5rem 0 1rem;
+        border: 2px solid var(--gray-200);
+        border-radius: var(--border-radius-full);
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--gray-700);
+        background: #ffffff url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="%234B5563"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>') no-repeat right 0.75rem center;
+        background-size: 1.25rem;
+        appearance: none;
+        cursor: pointer;
+        transition: all var(--transition-base);
+        min-width: 160px;
+    }
+
+        .filter-select:focus {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+    /* ============================================================
+            TABLE
+        ============================================================ */
+    .table-wrapper {
+        overflow-x: auto;
+        max-height: 800px;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: linear-gradient(180deg, var(--gray-50) 0%, #ffffff 100%);
+        }
+
+            .table thead tr {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            }
+
+        .table th {
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--gray-700);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            border-bottom: 2px solid var(--gray-300);
+            background: var(--gray-50);
+        }
+
+            .table th i {
+                margin-right: 0.5rem;
+                color: var(--primary-600);
+            }
+
+        .table tbody tr {
+            transition: all 150ms;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+            .table tbody tr:hover {
+                background: linear-gradient(90deg, var(--primary-50) 0%, transparent 100%);
+                transform: scale(1.01);
+                box-shadow: var(--shadow-sm);
+            }
+
+        .table td {
+            padding: 1.25rem 1.5rem;
+            font-size: 0.95rem;
+            color: var(--gray-700);
+            vertical-align: middle;
+        }
+
+    /* ============================================================
+            AVATAR & CUSTOMER INFO
+        ============================================================ */
+    .customer-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .avatar {
+        width: 3rem;
+        height: 3rem;
+        border-radius: var(--border-radius-full);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #ffffff;
+        background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+        box-shadow: var(--shadow-md);
+        transition: transform var(--transition-base);
+    }
+
+    /* Added for User Management */
+    .avatar-sm {
+        width: 2.5rem; /* 40px */
+        height: 2.5rem; /* 40px */
+        font-size: 0.875rem; /* 14px */
+    }
+
+    .table tbody tr:hover .avatar {
+        transform: scale(1.15);
+    }
+
+    .customer-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .customer-name {
+        font-weight: 700;
+        color: var(--gray-900);
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .customer-id {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        font-weight: 600;
+    }
+
+    /* ============================================================
+            [NEW] STYLED TABLE DATA CELLS
+        ============================================================ */
+    .data-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .data-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        white-space: nowrap;
+    }
+
+    .data-value {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--gray-900);
+    }
+
+        .data-value i.fas {
+            width: 1.1rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .data-value i.fa-phone,
+        .data-value i.fa-envelope {
+            color: var(--primary-600);
+        }
+
+        .data-value i.fa-clock {
+            color: var(--gray-500);
+        }
+
+        .data-value span {
+            word-break: break-word;
+        }
+
+
+    /* ============================================================
+            BADGES
+        ============================================================ */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        border-radius: var(--border-radius-full);
+        white-space: nowrap;
+        letter-spacing: 0.025em;
+        text-transform: uppercase;
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-base);
+    }
+
+        .badge i {
+            font-size: 0.9rem;
+        }
+
+    .badge-new {
+        background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
+        color: #1E40AF;
+        border: 2px solid #3B82F6;
+    }
+
+    .badge-warning {
+        background: linear-gradient(135deg, var(--warning-100), var(--warning-50));
+        color: var(--warning-600);
+        border: 2px solid var(--warning-600);
+    }
+
+    .badge-success {
+        background: linear-gradient(135deg, var(--success-100), var(--success-50));
+        color: var(--success-600);
+        border: 2px solid var(--success-600);
+    }
+
+    .badge-failed {
+        background: linear-gradient(135deg, var(--danger-100), var(--danger-50));
+        color: var(--danger-600);
+        border: 2px solid var(--danger-600);
+    }
+
+    .badge-contacted {
+        background: linear-gradient(135deg, var(--primary-100), var(--primary-50));
+        color: var(--primary-600);
+        border: 2px solid var(--primary-600);
+    }
+
+    .badge-noanswer {
+        background: linear-gradient(135deg, var(--gray-200), var(--gray-100));
+        color: var(--gray-700);
+        border: 2px solid var(--gray-400);
+    }
+
+    /* Added for User Management */
+    .badge-admin {
+        background: linear-gradient(135deg, #F3E8FF, #E9D5FF); /* Purple light */
+        color: #5B21B6; /* Purple dark */
+        border: 2px solid #7C3AED;
+    }
+
+    .badge-user {
+        background: linear-gradient(135deg, var(--gray-200), var(--gray-100));
+        color: var(--gray-700);
+        border: 2px solid var(--gray-400);
+    }
+
+    .status-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        border-radius: var(--border-radius-full);
+        white-space: nowrap;
+        letter-spacing: 0.025em;
+        text-transform: uppercase;
+    }
+
+    .status-active {
+        background: var(--success-50);
+        color: var(--success-600);
+    }
+
+        .status-active::before {
+            content: '';
+            display: inline-block;
+            width: 0.6rem;
+            height: 0.6rem;
+            border-radius: var(--border-radius-full);
+            background-color: var(--success-500);
+            margin-right: 0.25rem;
+        }
+
+    .status-pending {
+        background: var(--warning-50);
+        color: var(--warning-600);
+    }
+
+        .status-pending::before {
+            content: '';
+            display: inline-block;
+            width: 0.6rem;
+            height: 0.6rem;
+            border-radius: var(--border-radius-full);
+            background-color: var(--warning-500);
+            margin-right: 0.25rem;
+        }
+
+    /* ============================================================
+            ACTION BUTTONS
+        ============================================================ */
+    .table-actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .table-action-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: var(--border-radius-lg);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: #ffffff;
+        border: none;
+        cursor: pointer;
+        transition: all var(--transition-base);
+        box-shadow: var(--shadow-md);
+    }
+
+        .table-action-btn:hover {
+            transform: translateY(-4px) scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+    .table-action-edit {
+        background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+    }
+
+        .table-action-edit:hover {
+            background: linear-gradient(135deg, var(--warning-600), #B45309);
+        }
+
+    .table-action-delete {
+        background: linear-gradient(135deg, var(--danger-500), var(--danger-600));
+    }
+
+        .table-action-delete:hover {
+            background: linear-gradient(135deg, var(--danger-600), #B91C1C);
+        }
+
+    /* ============================================================
+            PAGINATION
+        ============================================================ */
+    .pagination-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.75rem 2rem;
+        background: linear-gradient(to right, #ffffff, var(--gray-50));
+        border-top: 2px solid var(--gray-200);
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    /* ============================================================
+            MODALS
+        ============================================================ */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 1.5rem;
+        animation: fadeIn var(--transition-base);
+    }
+
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+    .modal-content {
+        background: #ffffff;
+        border-radius: var(--border-radius-xl);
+        box-shadow: var(--shadow-xl);
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        animation: fadeIn var(--transition-base);
+        border: 1px solid var(--gray-200);
+    }
+
+    /* Fix for modal secondary buttons */
+    .modal-footer .btn-secondary {
+        background: var(--gray-100);
+        color: var(--gray-700);
+        border: 2px solid var(--gray-300);
+        backdrop-filter: none;
+    }
+
+        .modal-footer .btn-secondary:hover:not(:disabled) {
+            background: var(--gray-200);
+            color: var(--gray-900);
+            border-color: var(--gray-400);
+        }
+
+    .modal-header {
+        padding: 2rem;
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+    .modal-close {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: var(--border-radius-full);
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all var(--transition-base);
+    }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+    .modal-body {
+        padding: 2rem;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .modal-footer {
+        padding: 1.5rem 2rem;
+        background: var(--gray-50);
+        border-top: 2px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 1rem;
+    }
+
+    /* ============================================================
+            FORM ELEMENTS
+        ============================================================ */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--gray-700);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid var(--gray-200);
+        border-radius: var(--border-radius-md);
+        font-size: 1rem;
+        color: var(--gray-900);
+        background: #ffffff;
+        transition: all var(--transition-base);
+        font-weight: 500;
+    }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+    .form-textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .form-input-wrapper {
+        position: relative;
+    }
+
+    .form-input-icon {
+        position: absolute;
+        right: 0.875rem; /* 14px */
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-500);
+        cursor: pointer;
+        transition: color var(--transition-base);
+    }
+
+        .form-input-icon:hover {
+            color: var(--primary-600);
+        }
+
+
+    /* ============================================================
+            LOADING & EMPTY STATES
+        ============================================================ */
+    .loading-container {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    /* Used in table loading */
+    .spinner-lg {
+        display: inline-block;
+        width: 4rem;
+        height: 4rem;
+        border: 5px solid var(--primary-200);
+        border-top-color: var(--primary-600);
+        border-radius: var(--border-radius-full);
+        animation: spin 0.8s linear infinite;
+    }
+
+    /* Used in buttons */
+    .spinner-sm {
+        display: inline-block;
+        width: 1.25rem; /* 20px */
+        height: 1.25rem; /* 20px */
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #ffffff;
+        border-radius: var(--border-radius-full);
+        animation: spin 0.8s linear infinite;
+    }
+
+    .btn-secondary .spinner-sm {
+        border: 3px solid var(--gray-400);
+        border-top-color: var(--gray-700);
+    }
+
+
+    .loading-text {
+        color: var(--gray-600);
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .empty-icon {
+        font-size: 5rem;
+        color: var(--gray-300);
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-text {
+        font-size: 1.25rem;
+        color: var(--gray-500);
+        font-weight: 600;
+    }
+
+    /* ============================================================
+            ALERTS (for delete modal)
+        ============================================================ */
+    .alert {
+        padding: 1rem;
+        border-radius: var(--border-radius-lg);
+        border-left-width: 4px;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .alert-warning {
+        background-color: var(--danger-50);
+        border-color: var(--danger-500);
+        color: var(--danger-700);
+    }
+
+    .alert i {
+        font-size: 1.25rem;
+    }
+
+
+    /* ============================================================
+            RESPONSIVE
+        ============================================================ */
+    @@media (max-width: 768px) {
+        .page-header {
+            padding: 1.5rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filters-group {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .search-wrapper {
+            max-width: 100%;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            font-size: 0.85rem;
+        }
+    }
+</style>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    [REFACTORED] PAGE HEADER
+    ═══════════════════════════════════════════════════════════════
+-->
+<div class="page-header">
+    <div class="page-header-content">
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <div class="page-header-icon">
+                <i class="fas fa-users-cog"></i>
+            </div>
+            <div class="page-header-text">
+                <h1>User Management</h1>
+                <p>Manage system users and their permissions</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button id="refreshBtn" class="btn btn-secondary">
+                <i class="fas fa-sync-alt"></i>
+                <span>Refresh</span>
+            </button>
+            <button id="addUserBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                <span>Add User</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    [REFACTORED] STATISTICS CARDS
+    ═══════════════════════════════════════════════════════════════
+-->
+<div class="stats-grid">
+    <div class="stat-card stat-card-primary">
+        <div class="stat-card-content">
+            <div class="stat-icon stat-icon-primary">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-label">Total Users</div>
+                <div class="stat-value" id="totalUsers">0</div>
+                <div class="stat-description">All system users</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card stat-card-success">
+        <div class="stat-card-content">
+            <div class="stat-icon stat-icon-success">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-label">Active Users</div>
+                <div class="stat-value" id="activeUsers">0</div>
+                <div class="stat-description">Verified users</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card stat-card-warning">
+        <!-- Changed to warning for purple -->
+        <div class="stat-card-content">
+            <div class="stat-icon stat-icon-warning">
+                <!-- Changed to warning for purple -->
+                <i class="fas fa-crown"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-label">Administrators</div>
+                <div class="stat-value" id="adminUsers">0</div>
+                <div class="stat-description">System admins</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    [REFACTORED] TABLE CONTAINER
+    ═══════════════════════════════════════════════════════════════
+-->
+<div class="table-container">
+    <div class="table-filters">
+        <div class="filters-group">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text"
+                       id="searchUserInput"
+                       placeholder="Search by name or email..."
+                       class="filter-input"> <!-- Removed pl-10 -->
+            </div>
+
+            <select id="filterRole" class="filter-select">
+                <option value="">All Roles</option>
+                <option value="Admin">Admin</option>
+                <option value="User">User</option>
+            </select>
+
+            <select id="filterStatus" class="filter-select">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="pending">Pending</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-user"></i>User</th>
+                    <th><i class="fas fa-envelope"></i>Email</th>
+                    <th><i class="fas fa-phone"></i>Phone</th>
+                    <th><i class="fas fa-shield-alt"></i>Role</th>
+                    <th><i class="fas fa-check-circle"></i>Status</th>
+                    <th style="text-align: center;"><i class="fas fa-cog"></i>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="usersTableBody">
+                <!-- Loading State -->
+                <tr>
+                    <td colspan="6">
+                        <div class="loading-container">
+                            <div class="spinner-lg"></div> <!-- Changed to spinner-lg -->
+                            <p class="loading-text">Loading users...</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--
+    ═══════════════════════════════════════════════════════════════
+    [REFACTORED] MODALS
+    ═══════════════════════════════════════════════════════════════
+-->
+<!-- Add User Modal -->
+<div id="addUserModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-plus"></i>Add New User</h3>
+            <button onclick="closeModal('addUserModal')" class="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="addUserForm">
+                <div class="form-group">
+                    <label for="newUsername" class="form-label">Username</label>
+                    <input type="text" id="newUsername" class="form-input" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label for="newEmail" class="form-label">Email</label>
+                    <input type="email" id="newEmail" class="form-input" placeholder="user@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPhone" class="form-label">Phone Number</label>
+                    <input type="tel" id="newPhone" class="form-input" placeholder="+1234567890">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword" class="form-label">Password</label>
+                    <div class="form-input-wrapper">
+                        <input type="password" id="newPassword" class="form-input" placeholder="Enter password" required>
+                        <i id="newPasswordIcon" class="fas fa-eye form-input-icon" onclick="togglePasswordVisibility('newPassword', 'newPasswordIcon')"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="newRole" class="form-label">Role</label>
+                    <select id="newRole" class="form-select">
+                        <option value="User">User</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" onclick="closeModal('addUserModal')" class="btn btn-secondary">
+                <i class="fas fa-times"></i>Cancel
+            </button>
+            <button type="button" id="submitAddUser" class="btn btn-primary">
+                <span id="addUserBtnText"><i class="fas fa-user-plus"></i>Add User</span>
+                <span id="addUserBtnSpinner" class="spinner-sm hidden"></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div id="editUserModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-edit"></i>Edit User</h3>
+            <button onclick="closeModal('editUserModal')" class="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId">
+                <div class="form-group">
+                    <label for="editUserName" class="form-label">Username</label>
+                    <input type="text" id="editUserName" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="editUserEmail" class="form-label">Email</label>
+                    <input type="email" id="editUserEmail" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="editUserPhone" class="form-label">Phone Number</label>
+                    <input type="tel" id="editUserPhone" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="editUserRole" class="form-label">Role</label>
+                    <select id="editUserRole" class="form-select">
+                        <option value="User">User</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" onclick="closeModal('editUserModal')" class="btn btn-secondary">
+                <i class="fas fa-times"></i>Cancel
+            </button>
+            <button type="button" id="submitEditUser" class="btn btn-primary">
+                <span id="editUserBtnText"><i class="fas fa-save"></i>Save Changes</span>
+                <span id="editUserBtnSpinner" class="spinner-sm hidden"></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete User Modal -->
+<div id="deleteUserModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header" style="background: linear-gradient(135deg, var(--danger-600), #B91C1C);">
+            <h3><i class="fas fa-exclamation-triangle"></i>Confirm Deletion</h3>
+            <button onclick="closeModal('deleteUserModal')" class="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="deleteUserId">
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-circle"></i>
+                <div>
+                    <strong>Warning!</strong>
+                    <p class="text-sm">Are you sure you want to delete this user? This action cannot be undone.</p>
+                </div>
+            </div>
+            <p style="color: var(--gray-700); margin-top: 1.5rem;">User: <span id="deleteUserName" style="font-weight: 700; color: var(--gray-900);"></span></p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" onclick="closeModal('deleteUserModal')" class="btn btn-secondary">
+                <i class="fas fa-times"></i>Cancel
+            </button>
+            <button type="button" id="confirmDeleteUser" class="btn btn-danger">
+                <span id="deleteUserBtnText"><i class="fas fa-trash"></i>Delete User</span>
+                <span id="deleteUserBtnSpinner" class="spinner-sm hidden"></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        let users = [];
+        let allUsers = [];
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Toggle Password Visibility
+        function togglePasswordVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Load Users
+        async function loadUsers() {
+            // Show loading spinner
+            document.getElementById('usersTableBody').innerHTML = `
+                <tr>
+                    <td colspan="6">
+                        <div class="loading-container">
+                            <div class="spinner-lg"></div>
+                            <p class="loading-text">Loading users...</p>
+                        </div>
+                    </td>
+                </tr>`;
+            try {
+                const response = await fetch('/api/users/all');
+                if (!response.ok) throw new Error('Failed to fetch users');
+
+                allUsers = await response.json();
+                users = allUsers;
+                renderUsers(users);
+                updateStatistics();
+            } catch (error) {
+                console.error('Error loading users:', error);
+                showToast('Failed to load users', 'error');
+                document.getElementById('usersTableBody').innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fas fa-exclamation-circle empty-icon" style="color: var(--danger-500);"></i>
+                                <p class="empty-text" style="color: var(--danger-600);">Failed to load users</p>
+                            </div>
+                        </td>
+                    </tr>`;
+            }
+        }
+
+        // Update Statistics
+        function updateStatistics() {
+            document.getElementById('totalUsers').textContent = allUsers.length;
+            document.getElementById('activeUsers').textContent = allUsers.filter(u => u.emailConfirmed).length;
+            document.getElementById('adminUsers').textContent = allUsers.filter(u => u.role === 'Admin').length;
+        }
+
+        // Helper: Get Initials
+        function getInitials(name) {
+            if (!name) return '??';
+            const parts = name.trim().split(' ').filter(Boolean);
+            if (parts.length >= 2) {
+                return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            }
+            return name.substring(0, 2).toUpperCase();
+        }
+
+        function escapeHtml(text) {
+            if (typeof text !== 'string') return '';
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>\"']/g, m => map[m]);
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // [REFACTORED] RENDER USERS TABLE
+        // ═══════════════════════════════════════════════════════════════
+        function renderUsers(data) {
+            const tbody = document.getElementById('usersTableBody');
+
+            if (data.length === 0) {
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <i class="fas fa-users-slash empty-icon"></i>
+                            <p class="empty-text">No users found</p>
+                        </div>
+                    </td>
+                </tr>`;
+                return;
+            }
+
+            tbody.innerHTML = data.map(user => {
+                const roleClass = user.role === 'Admin' ? 'badge-admin' : 'badge-user';
+                const statusClass = user.emailConfirmed ? 'status-active' : 'status-pending';
+                const statusText = user.emailConfirmed ? 'Active' : 'Pending';
+                const initials = getInitials(user.userName);
+                const userName = user.userName || 'N/A';
+                const userEmail = user.email || 'N/A';
+                const userPhone = user.phoneNumber || 'N/A';
+                const userIdShort = user.id.substring(0, 8);
+                const avatarColor = user.role === 'Admin' ? 'background: linear-gradient(135deg, #a855f7, #9333ea);' : '';
+
+
+                return `
+                    <tr data-user-id="${user.id}">
+                        <!-- User -->
+                        <td>
+                            <div class="customer-info">
+                                <div class="avatar avatar-sm" style="${avatarColor}">
+                                    ${escapeHtml(initials)}
+                                </div>
+                                <div class="customer-details">
+                                    <div class="customer-name">${escapeHtml(userName)}</div>
+                                    <div class="customer-id">ID: ${escapeHtml(userIdShort)}...</div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Email -->
+                        <td>
+                            <div class="data-cell">
+                                <div class="data-label">Email</div>
+                                <div class="data-value">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>${escapeHtml(userEmail)}</span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Phone -->
+                        <td>
+                            <div class="data-cell">
+                                <div class="data-label">Phone</div>
+                                <div class="data-value">
+                                    <i class="fas fa-phone"></i>
+                                    <span>${escapeHtml(userPhone)}</span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Role -->
+                        <td>
+                            <div class="data-cell">
+                                <div class="data-label">Role</div>
+                                <div>
+                                    <span class="badge ${roleClass}">
+                                        <i class="fas ${user.role === 'Admin' ? 'fa-crown' : 'fa-user'}"></i>
+                                        ${escapeHtml(user.role)}
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Status -->
+                        <td>
+                            <div class="data-cell">
+                                <div class="data-label">Status</div>
+                                <div>
+                                    <span class="status-indicator ${statusClass}">
+                                        ${statusText}
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Actions -->
+                        <td>
+                            <div class="table-actions">
+                                <button onclick="editUser('${user.id}')"
+                                        class="table-action-btn table-action-edit"
+                                        title="Edit User">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="confirmDeleteUser('${user.id}', '${escapeHtml(user.userName)}')"
+                                        class="table-action-btn table-action-delete"
+                                        title="Delete User">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Add User
+        document.getElementById('addUserBtn').addEventListener('click', () => {
+            document.getElementById('addUserForm').reset();
+            openModal('addUserModal');
+        });
+
+        document.getElementById('submitAddUser').addEventListener('click', async () => {
+            const username = document.getElementById('newUsername').value.trim();
+            const email = document.getElementById('newEmail').value.trim();
+            const phone = document.getElementById('newPhone').value.trim();
+            const password = document.getElementById('newPassword').value;
+            const role = document.getElementById('newRole').value;
+
+            if (!username || !email || !password) {
+                showToast('Please fill all required fields', 'warning');
+                return;
+            }
+
+            const btn = document.getElementById('submitAddUser');
+            btn.disabled = true;
+            document.getElementById('addUserBtnText').classList.add('hidden');
+            document.getElementById('addUserBtnSpinner').classList.remove('hidden');
+
+            try {
+                const response = await fetch('/api/users/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userName: username,
+                        email,
+                        phoneNumber: phone,
+                        password,
+                        role
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Failed to create user');
+                }
+
+                showToast('User added successfully', 'success');
+                closeModal('addUserModal');
+                document.getElementById('addUserForm').reset();
+                await loadUsers();
+            } catch (error) {
+                console.error('Error adding user:', error);
+                showToast(error.message || 'Failed to add user', 'error');
+            } finally {
+                btn.disabled = false;
+                document.getElementById('addUserBtnText').classList.remove('hidden');
+                document.getElementById('addUserBtnSpinner').classList.add('hidden');
+            }
+        });
+
+        // Edit User
+        async function editUser(id) {
+            try {
+                const response = await fetch(`/api/users/${id}`);
+                if (!response.ok) throw new Error('Failed to load user');
+
+                const user = await response.json();
+
+                document.getElementById('editUserId').value = user.id;
+                document.getElementById('editUserName').value = user.userName;
+                document.getElementById('editUserEmail').value = user.email;
+                document.getElementById('editUserPhone').value = user.phoneNumber || '';
+                document.getElementById('editUserRole').value = user.role;
+
+                openModal('editUserModal');
+            } catch (error) {
+                console.error('Error loading user:', error);
+                showToast('Failed to load user details', 'error');
+            }
+        }
+
+        document.getElementById('submitEditUser').addEventListener('click', async () => {
+            const id = document.getElementById('editUserId').value;
+            const userName = document.getElementById('editUserName').value.trim();
+            const email = document.getElementById('editUserEmail').value.trim();
+            const phoneNumber = document.getElementById('editUserPhone').value.trim();
+            const role = document.getElementById('editUserRole').value;
+
+            const btn = document.getElementById('submitEditUser');
+            btn.disabled = true;
+            document.getElementById('editUserBtnText').classList.add('hidden');
+            document.getElementById('editUserBtnSpinner').classList.remove('hidden');
+
+            try {
+                const response = await fetch(`/api/users/update/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userName, email, phoneNumber, role })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Failed to update user');
+                }
+
+                showToast('User updated successfully', 'success');
+                closeModal('editUserModal');
+                await loadUsers();
+            } catch (error) {
+                console.error('Error updating user:', error);
+                showToast(error.message || 'Failed to update user', 'error');
+            } finally {
+                btn.disabled = false;
+                document.getElementById('editUserBtnText').classList.remove('hidden');
+                document.getElementById('editUserBtnSpinner').classList.add('hidden');
+            }
+        });
+
+        // Delete User
+        function confirmDeleteUser(id, name) {
+            document.getElementById('deleteUserId').value = id;
+            document.getElementById('deleteUserName').textContent = name;
+            openModal('deleteUserModal');
+        }
+
+        document.getElementById('confirmDeleteUser').addEventListener('click', async () => {
+            const id = document.getElementById('deleteUserId').value;
+
+            const btn = document.getElementById('confirmDeleteUser');
+            btn.disabled = true;
+            document.getElementById('deleteUserBtnText').classList.add('hidden');
+            document.getElementById('deleteUserBtnSpinner').classList.remove('hidden');
+
+            try {
+                const response = await fetch(`/api/users/delete/${id}`, { method: 'DELETE' });
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Failed to delete user');
+                }
+
+                showToast('User deleted successfully', 'success');
+                closeModal('deleteUserModal');
+                await loadUsers();
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                showToast(error.message || 'Failed to delete user', 'error');
+            } finally {
+                btn.disabled = false;
+                document.getElementById('deleteUserBtnText').classList.remove('hidden');
+                document.getElementById('deleteUserBtnSpinner').classList.add('hidden');
+            }
+        });
+
+        // Search
+        document.getElementById('searchUserInput').addEventListener('input', (e) => {
+            applyFilters();
+        });
+
+        // Filter by Role
+        document.getElementById('filterRole').addEventListener('change', (e) => {
+            applyFilters();
+        });
+
+        // Filter by Status
+        document.getElementById('filterStatus').addEventListener('change', (e) => {
+            applyFilters();
+        });
+
+        function applyFilters() {
+            const search = document.getElementById('searchUserInput').value.toLowerCase();
+            const role = document.getElementById('filterRole').value;
+            const status = document.getElementById('filterStatus').value;
+
+            let filtered = allUsers;
+
+            // Filter by search term
+            if (search) {
+                filtered = filtered.filter(u =>
+                    (u.userName && u.userName.toLowerCase().includes(search)) ||
+                    (u.email && u.email.toLowerCase().includes(search))
+                );
+            }
+
+            // Filter by role
+            if (role) {
+                filtered = filtered.filter(u => u.role === role);
+            }
+
+            // Filter by status
+            if (status === 'active') {
+                filtered = filtered.filter(u => u.emailConfirmed);
+            } else if (status === 'pending') {
+                filtered = filtered.filter(u => !u.emailConfirmed);
+            }
+
+            renderUsers(filtered);
+        }
+
+        // Refresh
+        document.getElementById('refreshBtn').addEventListener('click', loadUsers);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+             // Fallback for showToast if not defined from _Layout
+            if (typeof showToast === 'undefined') {
+                console.warn("showToast function is not defined. Using fallback.");
+                window.showToast = function(message, type) {
+                    alert(`(${type}): ${message}`);
+                }
+            }
+            loadUsers();
+        });
+    </script>
+}

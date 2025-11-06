@@ -1,0 +1,446 @@
+@page
+@model IndexModel
+@inject SignInManager<IdentityUser> SignInManager
+@{
+    ViewData["Title"] = "Account Settings";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+
+<style>
+    .settings-wrapper {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+    
+    .settings-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem;
+        color: white;
+    }
+    
+    .settings-tabs {
+        display: flex;
+        gap: 0.25rem;
+        padding: 0.5rem;
+        background: #f3f4f6;
+        border-bottom: 1px solid #e5e7eb;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+    
+    .tab-button {
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+        border: none;
+        background: transparent;
+        color: #6b7280;
+        cursor: pointer;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    .tab-button:hover {
+        background: #e0e7ff;
+        color: #4f46e5;
+    }
+    
+    .tab-button.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    }
+    
+    .tab-content-wrapper {
+        padding: 2rem;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+        animation: fadeIn 0.3s ease-out;
+    }
+    
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .settings-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: all 0.2s;
+    }
+    
+    .settings-card:hover {
+        border-color: #a5b4fc;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+    }
+    
+    .avatar-display {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    
+    .input-field {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+    }
+    
+    .input-field:focus {
+        outline: none;
+        border-color: #818cf8;
+        box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.1);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-secondary {
+        background: white;
+        color: #6b7280;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+        border: 1px solid #d1d5db;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .btn-secondary:hover {
+        border-color: #818cf8;
+        color: #4f46e5;
+    }
+    
+    .settings-link-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
+        margin-bottom: 0.75rem;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.2s;
+    }
+    
+    .settings-link-card:hover {
+        border-color: #a5b4fc;
+        background: #f9fafb;
+        transform: translateX(4px);
+    }
+    
+    .icon-badge {
+        width: 40px;
+        height: 40px;
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: white;
+        flex-shrink: 0;
+    }
+    
+    .badge-purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .badge-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    .badge-orange { background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); }
+    .badge-blue { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+</style>
+
+<!-- Settings Page Content -->
+<div class="settings-wrapper">
+    <!-- Header -->
+    <div class="settings-header">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold mb-1">
+                    <i class="fas fa-user-cog mr-2"></i>Account Settings
+                </h1>
+                <p class="text-indigo-100 text-sm">Manage your account settings and preferences</p>
+            </div>
+        </div>
+    </div>
+    
+    <partial name="_StatusMessage" for="StatusMessage" />
+    
+    <!-- Tabs -->
+    <div class="settings-tabs">
+        <button onclick="switchTab('profile')" id="tab-profile" class="tab-button active">
+            <i class="fas fa-user mr-2"></i>Profile
+        </button>
+        <button onclick="switchTab('security')" id="tab-security" class="tab-button">
+            <i class="fas fa-lock mr-2"></i>Security
+        </button>
+        <button onclick="switchTab('preferences')" id="tab-preferences" class="tab-button">
+            <i class="fas fa-cog mr-2"></i>Preferences
+        </button>
+        <button onclick="switchTab('privacy')" id="tab-privacy" class="tab-button">
+            <i class="fas fa-user-shield mr-2"></i>Privacy
+        </button>
+    </div>
+    
+    <!-- Tab Content -->
+    <div class="tab-content-wrapper">
+        <!-- Profile Tab -->
+        <div id="content-profile" class="tab-content active">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Profile Information</h2>
+            
+            <form id="profile-form" method="post">
+                <div asp-validation-summary="ModelOnly" class="p-3 bg-red-50 border-l-4 border-red-500 rounded text-red-700 text-sm mb-4" role="alert"></div>
+                
+                <div class="settings-card">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="avatar-display">
+                            @if (!string.IsNullOrEmpty(Model.Username))
+                            {
+                                @Model.Username.Substring(0, 1).ToUpper()
+                            }
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800">@Model.Username</h3>
+                            <p class="text-sm text-gray-600">Account Owner</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-user text-indigo-600 mr-1"></i>Username
+                            </label>
+                            <input asp-for="Username" class="input-field bg-gray-50" disabled />
+                            <p class="text-xs text-gray-500 mt-1">Username cannot be changed</p>
+                        </div>
+                        
+                        <div>
+                            <label asp-for="Input.PhoneNumber" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-phone text-indigo-600 mr-1"></i>Phone Number
+                            </label>
+                            <input asp-for="Input.PhoneNumber" class="input-field" placeholder="Enter phone number"/>
+                            <span asp-validation-for="Input.PhoneNumber" class="text-red-500 text-xs mt-1 block"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3 mt-6">
+                        <button id="update-profile-button" type="submit" class="btn-primary">
+                            <i class="fas fa-save mr-2"></i>Save Changes
+                        </button>
+                        <button type="reset" class="btn-secondary">
+                            <i class="fas fa-undo mr-2"></i>Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Security Tab -->
+        <div id="content-security" class="tab-content">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Security Settings</h2>
+            
+            <a asp-page="./ChangePassword" class="settings-link-card">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="icon-badge badge-purple">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 0.25rem;">Change Password</h3>
+                        <p style="font-size: 0.875rem; color: #6b7280;">Update your password regularly</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: #9ca3af;"></i>
+            </a>
+
+            <a asp-page="./TwoFactorAuthentication" class="settings-link-card">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="icon-badge badge-green">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 0.25rem;">Two-Factor Authentication</h3>
+                        <p style="font-size: 0.875rem; color: #6b7280;">Add extra layer of security</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: #9ca3af;"></i>
+            </a>
+
+            @if (hasExternalLogins)
+            {
+                <a asp-page="./ExternalLogins" class="settings-link-card">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div class="icon-badge badge-blue">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-weight: 600; margin-bottom: 0.25rem;">External Logins</h3>
+                            <p style="font-size: 0.875rem; color: #6b7280;">Manage authentication providers</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right" style="color: #9ca3af;"></i>
+                </a>
+            }
+        </div>
+
+        <!-- Preferences Tab -->
+        <div id="content-preferences" class="tab-content">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Preferences</h2>
+            
+            <a asp-page="./Email" class="settings-link-card">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="icon-badge badge-orange">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 0.25rem;">Email Settings</h3>
+                        <p style="font-size: 0.875rem; color: #6b7280;">Manage your email address</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: #9ca3af;"></i>
+            </a>
+            
+            <div class="settings-card">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div class="icon-badge badge-purple">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-weight: 600;">Notification Preferences</h3>
+                        <p style="font-size: 0.875rem; color: #6b7280;">Choose notifications to receive</p>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <label style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: #f9fafb; border-radius: 0.5rem; cursor: pointer;">
+                        <span style="font-weight: 600; font-size: 0.875rem;">
+                            <i class="fas fa-envelope" style="color: #667eea; margin-right: 0.5rem;"></i>
+                            Email Notifications
+                        </span>
+                        <input type="checkbox" checked style="width: 1.25rem; height: 1.25rem;">
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: #f9fafb; border-radius: 0.5rem; cursor: pointer;">
+                        <span style="font-weight: 600; font-size: 0.875rem;">
+                            <i class="fas fa-mobile-alt" style="color: #667eea; margin-right: 0.5rem;"></i>
+                            SMS Notifications
+                        </span>
+                        <input type="checkbox" style="width: 1.25rem; height: 1.25rem;">
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy Tab -->
+        <div id="content-privacy" class="tab-content">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Privacy & Data</h2>
+            
+            <a asp-page="./PersonalData" class="settings-link-card">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="icon-badge badge-purple">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 0.25rem;">Personal Data</h3>
+                        <p style="font-size: 0.875rem; color: #6b7280;">Download or delete your data</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: #9ca3af;"></i>
+            </a>
+            
+            <div class="settings-card" style="background: #eff6ff; border-color: #93c5fd;">
+                <div style="display: flex; gap: 1rem;">
+                    <div style="flex-shrink: 0;">
+                        <div class="icon-badge" style="background: #2563eb;">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 0.5rem; color: #1e3a8a;">Your Privacy Matters</h3>
+                        <p style="font-size: 0.875rem; color: #1e40af; margin-bottom: 0.75rem;">
+                            We take your privacy seriously. Your data is encrypted and securely stored.
+                        </p>
+                        <button style="font-size: 0.875rem; color: #667eea; font-weight: 600; background: none; border: none; cursor: pointer; padding: 0;">
+                            <i class="fas fa-book" style="margin-right: 0.5rem;"></i>Read Privacy Policy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            const selectedContent = document.getElementById('content-' + tabName);
+            if (selectedContent) {
+                selectedContent.style.display = 'block';
+            }
+            
+            // Add active class to selected tab
+            const selectedTab = document.getElementById('tab-' + tabName);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+        }
+        
+        // Add animation on form submit
+        document.getElementById('profile-form').addEventListener('submit', function(e) {
+            const btn = document.getElementById('update-profile-button');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
+            btn.disabled = true;
+        });
+    </script>
+}

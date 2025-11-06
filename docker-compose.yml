@@ -1,0 +1,16 @@
+﻿version: '3.8'
+
+services:
+  osv-app:
+    # Builds the Dockerfile from the current directory
+    build: .
+    # Sets a friendly name for the image
+    image: osv-image:latest
+    # Maps port 8080 on the Linux host to port 8080 in the container
+    ports:
+      - "8080:8080"
+    # This is the magic line: it reads the .env file for secrets
+    env_file:
+      - .env
+    # Always restart the container if it stops
+    restart: always
