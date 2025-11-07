@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -32,7 +33,6 @@ namespace OSV.Attributes
 
             var request = context.HttpContext.Request;
 
-            // 2. التحقق من وجود الهيدر
             if (!request.Headers.TryGetValue(SignatureHeaderName, out var signatureHeader))
             {
                 _logger.LogWarning("Webhook request missing '{HeaderName}' header.", SignatureHeaderName);
@@ -41,35 +41,52 @@ namespace OSV.Attributes
             }
 
             var signatureHeaderText = signatureHeader.ToString();
+            _logger.LogWarning("Received '{HeaderName}' header with raw value: [{Value}]",
+        SignatureHeaderName, signatureHeaderText);
 
             if (string.IsNullOrWhiteSpace(signatureHeaderText) || !signatureHeaderText.StartsWith(SignaturePrefix))
             {
                 _logger.LogWarning("Invalid '{HeaderName}' format. Expected '{Prefix}'.", SignatureHeaderName, SignaturePrefix);
-                context.Result = new BadRequestObjectResult($"Invalid '{SignatureHeaderName}' format.");
+                context.Result = new BadRequestObjectResult($"Invalid Header format.{{{SignaturePrefix}}}");
                 return;
             }
-            string requestBody;
+
+            // ---------------- [بداية التعديل الجذري] ----------------
+            // لن نستخدم 'StreamReader' أو 'string'
+
+            byte[] bodyBytes;
             try
             {
-                using (var reader = new StreamReader(request.Body, Encoding.UTF8, leaveOpen: true))
+                // 1. إرجاع المؤشر (ما زلنا نحتاج هذا بسبب [FromBody])
+                request.Body.Position = 0;
+
+                // 2. قراءة الـ Stream مباشرة إلى MemoryStream ثم إلى byte[]
+                // هذه الطريقة تضمن أننا نقرأ الـ raw bytes كما هي
+                using (var ms = new MemoryStream())
                 {
-                    requestBody = await reader.ReadToEndAsync();
-                    request.Body.Position = 0;
+                    await request.Body.CopyToAsync(ms);
+                    bodyBytes = ms.ToArray();
                 }
+
+                // 3. إرجاع المؤشر مرة أخرى (Best practice)
+                request.Body.Position = 0;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to read webhook request body.");
+                _logger.LogError(ex, "Failed to read webhook request body bytes.");
                 context.Result = new StatusCodeResult(500);
                 return;
             }
 
+            // ---------------- [نهاية التعديل الجذري] ----------------
+
+
             byte[] computedHash;
             var secretBytes = Encoding.UTF8.GetBytes(secret);
-            var bodyBytes = Encoding.UTF8.GetBytes(requestBody);
 
             using (var hmac = new HMACSHA256(secretBytes))
             {
+                // 4. حساب الـ Hash على الـ raw bytes مباشرة
                 computedHash = hmac.ComputeHash(bodyBytes);
             }
 
@@ -88,13 +105,14 @@ namespace OSV.Attributes
 
             if (!CryptographicOperations.FixedTimeEquals(computedHash, headerHashBytes))
             {
+                // إذا استمر الفشل هنا، فالـ Secret Key في Postman مختلف 100% عن السيرفر
                 _logger.LogWarning("Webhook signature validation failed. Computed hash does not match header hash.");
-                context.Result = new UnauthorizedObjectResult("Invalid signature."); // 401
+                context.Result = new UnauthorizedObjectResult("Invalid signature.");
                 return;
             }
 
             _logger.LogInformation("Webhook signature validated successfully for {Path}.", request.Path);
-            await next(); // <-- السماح للـ Controller بالعمل
+            await next();
         }
     }
 }
