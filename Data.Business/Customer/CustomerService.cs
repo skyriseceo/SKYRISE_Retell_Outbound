@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using System.Net.Http.Json;
+using System.Threading;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace Data.Business.Customer
@@ -255,7 +256,7 @@ namespace Data.Business.Customer
             if (rootCallStatus != "completed")
             {
                 _logger.LogWarning("{Prefix} Received 'call_analyzed' but status is '{Status}' (expected 'completed'). Ignoring...",
-                    logPrefix, rootCallStatus, retellCallId);
+                    logPrefix, rootCallStatus);
                 return true;
             }
 
@@ -405,7 +406,6 @@ namespace Data.Business.Customer
             var result = new ImportResultDTO();
             var customersToInsert = new List<CustomerImportDTO>();
 
-            // <--- (الخطوة 1: إضافة HashSet لتتبع الأرقام داخل الملف)
             var phoneNumbersInFile = new HashSet<string>();
 
             try
@@ -432,7 +432,6 @@ namespace Data.Business.Customer
                 var dataTable = dataSet.Tables[0];
                 result.TotalRows = dataTable.Rows.Count;
 
-                // --- 1. البحث عن العواميد بمرونة ---
                 int nameColIdx = FindColumnIndex(dataTable.Columns, "name", "full name", "customer name");
                 int phoneColIdx = FindColumnIndex(dataTable.Columns, "phone", "phone number", "phonenumber");
                 int emailColIdx = FindColumnIndex(dataTable.Columns, "email", "email address", "e-mail");
@@ -459,15 +458,12 @@ namespace Data.Business.Customer
                             continue;
                         }
 
-                        // <--- (الخطوة 2: التحقق من التكرار داخل الملف)
-                        // phoneNumbersInFile.Add(phone) هترجع false لو الرقم موجود قبل كدة
                         if (!phoneNumbersInFile.Add(phone))
                         {
                             _logger.LogWarning("{Prefix} Skipping Row {RowNumber}: Phone number '{Phone}' is duplicated within the file.", logPrefix, rowNumber, phone);
                             result.ErrorMessages.Add($"Row {rowNumber}: Phone number '{phone}' is duplicated in the file. Skipping this row.");
                             continue; // تجاهل الصف ده وكمل
                         }
-                        // <--- (نهاية التعديل)
 
                         customersToInsert.Add(new CustomerImportDTO
                         {
@@ -497,13 +493,11 @@ namespace Data.Business.Customer
                     return result;
                 }
 
-                // (الكود ده زي ما هو، هيبعت بس القائمة المنقحة بدون تكرار)
                 var affectedRows = await _customerRepository.AddCustomersBulkAsync(customersToInsert, cancellationToken);
 
                 if (affectedRows.HasValue)
                 {
                     result.SuccessfullyImported = affectedRows.Value;
-                    // نحسب الفشل بناءً على عدد الصفوف اللي حاولت تدخل الداتابيز
                     result.FailedOrDuplicates = customersToInsert.Count - result.SuccessfullyImported;
 
 
@@ -513,7 +507,7 @@ namespace Data.Business.Customer
                 {
                     _logger.LogError("{Prefix} Bulk import failed. Repository returned null.", logPrefix);
                     result.ErrorMessages.Add("Database operation failed during bulk insert.");
-                    result.FailedOrDuplicates = customersToInsert.Count; // <--- تعديل: الفشل هنا خاص بالصفوف اللي اتبعتت
+                    result.FailedOrDuplicates = customersToInsert.Count; 
                 }
 
                 if (result.SuccessfullyImported > 0)
@@ -528,7 +522,6 @@ namespace Data.Business.Customer
                 result.ErrorMessages.Add($"An unexpected error occurred: {ex.Message}");
             }
 
-            // <--- (تعديل بسيط في اللوج عشان يبقى أوضح)
             _logger.LogInformation("{Prefix} Bulk import finished. Total Rows in file: {Total}, Rows sent to DB: {Sent}, Success: {Success}, Failed/DB Duplicates: {Failed}",
                 logPrefix, result.TotalRows, customersToInsert.Count, result.SuccessfullyImported, result.FailedOrDuplicates);
 
@@ -557,7 +550,6 @@ namespace Data.Business.Customer
             if (string.IsNullOrWhiteSpace(input))
                 return string.Empty;
 
-            // نخلي فقط الحروف والأرقام، ونحولها لحروف صغيرة
             return new string(input
                 .Trim()
                 .ToLowerInvariant()
@@ -593,10 +585,14 @@ namespace Data.Business.Customer
             }
             catch (Exception ex)
             {
-                // (الـ AwsSesEmailService سيرمي Exception في حالة الفشل، ونحن نلتقطه هنا)
                 _logger.LogError(ex, "{Prefix} Failed to send email to customer ID {Id}", logPrefix, customerId);
                 return false;
             }
+        }
+
+        public async Task<bool> UpdateCustomerStatusAsync(long customerId, enStatus newStatus, enStatus oldStatus, CancellationToken cancellationToken = default)
+        {
+            return await _customerRepository.UpdateCustomerStatusAsync(customerId, newStatus, oldStatus, cancellationToken);
         }
 
 

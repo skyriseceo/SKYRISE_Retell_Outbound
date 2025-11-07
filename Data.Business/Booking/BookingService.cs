@@ -119,6 +119,19 @@ namespace Data.Business.Booking
             }
         }
 
+        public async Task<bool> RescheduleBookingByCallIdAsync(string callId, DateTime newStartTime, CancellationToken cancellationToken = default)
+        {
+            return await _bookingRepository.RescheduleBookingByCallIdAsync(callId, newStartTime, cancellationToken);
+        }
+        public async Task<BookingDTO?> GetBookingByCallIdAsync(string callId, CancellationToken cancellationToken = default)
+        {
+            return await _bookingRepository.GetBookingByCallIdAsync(callId, cancellationToken);
+        }
+
+        public async Task<bool> UpdateBookingStatusByCallIdAsync(string callId, enBookingStatus newStatus, CancellationToken cancellationToken = default)
+        {
+            return await _bookingRepository.UpdateBookingStatusByCallIdAsync(callId, newStatus, cancellationToken);
+        }
 
     }
 }

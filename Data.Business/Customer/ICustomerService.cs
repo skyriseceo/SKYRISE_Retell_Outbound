@@ -20,5 +20,7 @@ namespace Data.Business.Customer
         Task<bool> SendEmailToCustomerAsync(long customerId, string subject, string body, CancellationToken cancellationToken = default);
         Task<bool> UpdateAndBroadcastStatus(CustomerDTO customer, enStatus newStatus, enStatus oldStatus, CancellationToken cancellationToken);
         Task<ImportResultDTO> ImportCustomersAsync(IFormFile file, CancellationToken cancellationToken = default);
+
+        Task<bool> UpdateCustomerStatusAsync(long customerId, enStatus newStatus, enStatus oldStatus, CancellationToken cancellationToken = default);
     }
 }

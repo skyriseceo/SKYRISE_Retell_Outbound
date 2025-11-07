@@ -10,5 +10,9 @@ namespace Data.Business.Booking
         Task<BookingDTO?> GetBookingByIdAsync(long bookingId, CancellationToken cancellationToken = default);
         Task<BookingStatisticsDTO?> GetBookingStatisticsAsync(CancellationToken cancellationToken = default);
         Task<bool> UpdateBookingStatusAsync(long bookingId, enBookingStatus status, CancellationToken cancellationToken = default);
+        Task<bool> RescheduleBookingByCallIdAsync(string callId, DateTime newStartTime, CancellationToken cancellationToken = default);
+        Task<bool> UpdateBookingStatusByCallIdAsync(string callId, enBookingStatus newStatus, CancellationToken cancellationToken = default);
+        Task<BookingDTO?> GetBookingByCallIdAsync(string callId, CancellationToken cancellationToken = default);
     }
 }
+
